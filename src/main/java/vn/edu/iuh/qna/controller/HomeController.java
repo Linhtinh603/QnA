@@ -12,19 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import vn.edu.iuh.qna.entity.AppUser;
-import vn.edu.iuh.qna.repository.AppUserRepository;
+import vn.edu.iuh.qna.entity.UserModel;
+import vn.edu.iuh.qna.repository.UserRepository;
 import vn.edu.iuh.qna.utils.WebUtils;
 
 @Controller
 public class HomeController {
 	@Autowired
-	private AppUserRepository userRepo;
-//	@GetMapping
-//	public String index(Model model) {
-//		model.addAttribute("message", "Huỳnh Thị Minh Phương");
-//		return "index";
-//	}
+	private UserRepository userRepo;
 
 	@Secured("USER")
 	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
