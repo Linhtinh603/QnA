@@ -27,6 +27,8 @@ public class QuestionModel {
 	@Id
 	private String id;
 	private String title;
+	@Indexed
+	private String titleNormalized;
 	private String content;
 	@Indexed
 	@DBRef
