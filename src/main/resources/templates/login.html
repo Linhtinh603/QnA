@@ -1,11 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-   <head>
-      <title>Login</title>
-   </head>
+   <head th:replace="_head(pageTitle='Đăng nhập')" ></head>
    <body>
-      <!-- Include _menu.html -->
-      <th:block th:include="/_menu"></th:block>
        
       <h1>Login</h1>
        
@@ -48,7 +44,6 @@
         <li>dbuser1/123</li>
         <li>dbadmin1/123</li>
       </ul>  
-       
+   <footer th:replace="_footer"></footer>
    </body>
-    
 </html>

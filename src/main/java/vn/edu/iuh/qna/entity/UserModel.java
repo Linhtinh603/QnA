@@ -28,7 +28,7 @@ public class UserModel {
 	@DBRef
 	private List<AnswerModel> markedQuestion;
 	private boolean status;
-	private RoleModel role;
+	private String role;
 	private String encrytedPassword;
 	private String userName;
 

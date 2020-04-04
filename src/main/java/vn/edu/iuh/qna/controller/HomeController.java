@@ -18,61 +18,11 @@ import vn.edu.iuh.qna.utils.WebUtils;
 
 @Controller
 public class HomeController {
-	@Autowired
-	private UserRepository userRepo;
-
-	@Secured("USER")
-	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
-	public String welcomePage(Model model) {
-		model.addAttribute("title", "Welcome");
-		model.addAttribute("message", "This is welcome page!");
-		//userRepo.save(new AppUser(null,"huu","123",true,null));
-		//userRepo.findAll().forEach(System.out::println);
-		return "welcomePage";
+	@GetMapping("/login")
+	public String login(Model model, Principal principal) {
+		return "login";
 	}
-
-	@Secured("ADMIN")
-	@RequestMapping(value = "/admin", method = RequestMethod.GET)
-	public String adminPage(Model model, Principal principal) {
-
-		User loginedUser = (User) ((Authentication) principal).getPrincipal();
-
-		String userInfo = WebUtils.toString(loginedUser);
-		model.addAttribute("userInfo", userInfo);
-
-		return "adminPage";
-	}
-
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String loginPage(Model model) {
-
-		return "loginPage";
-	}
-
-	@RequestMapping(value = "/logoutSuccessful", method = RequestMethod.GET)
-	public String logoutSuccessfulPage(Model model) {
-		model.addAttribute("title", "Logout");
-		return "logoutSuccessfulPage";
-	}
-
-	@Secured("ROLE_USER")
-	@RequestMapping(value = "/userInfo", method = RequestMethod.GET)
-	public String userInfo(Model model, Principal principal) {
-
-		// Sau khi user login thanh cong se co principal
-		String userName = principal.getName();
-
-		System.out.println("User Name: " + userName);
-
-		User loginedUser = (User) ((Authentication) principal).getPrincipal();
-
-		String userInfo = WebUtils.toString(loginedUser);
-		model.addAttribute("userInfo", userInfo);
-
-		return "userInfoPage";
-	}
-
-	@RequestMapping(value = "/403", method = RequestMethod.GET)
+	@GetMapping("/403")
 	public String accessDenied(Model model, Principal principal) {
 
 		if (principal != null) {
@@ -90,4 +40,57 @@ public class HomeController {
 
 		return "403Page";
 	}
+
+//	@Secured("USER")
+//	@RequestMapping(value = { "/", "/welcome" }, method = RequestMethod.GET)
+//	public String welcomePage(Model model) {
+//		model.addAttribute("title", "Welcome");
+//		model.addAttribute("message", "This is welcome page!");
+//		//userRepo.save(new AppUser(null,"huu","123",true,null));
+//		//userRepo.findAll().forEach(System.out::println);
+//		return "welcomePage";
+//	}
+//
+//	@Secured("ADMIN")
+//	@RequestMapping(value = "/admin", method = RequestMethod.GET)
+//	public String adminPage(Model model, Principal principal) {
+//
+//		User loginedUser = (User) ((Authentication) principal).getPrincipal();
+//
+//		String userInfo = WebUtils.toString(loginedUser);
+//		model.addAttribute("userInfo", userInfo);
+//
+//		return "adminPage";
+//	}
+//
+//	@RequestMapping(value = "/login", method = RequestMethod.GET)
+//	public String loginPage(Model model) {
+//
+//		return "loginPage";
+//	}
+//
+//	@RequestMapping(value = "/logoutSuccessful", method = RequestMethod.GET)
+//	public String logoutSuccessfulPage(Model model) {
+//		model.addAttribute("title", "Logout");
+//		return "logoutSuccessfulPage";
+//	}
+//
+//	@Secured("ROLE_USER")
+//	@RequestMapping(value = "/userInfo", method = RequestMethod.GET)
+//	public String userInfo(Model model, Principal principal) {
+//
+//		// Sau khi user login thanh cong se co principal
+//		String userName = principal.getName();
+//
+//		System.out.println("User Name: " + userName);
+//
+//		User loginedUser = (User) ((Authentication) principal).getPrincipal();
+//
+//		String userInfo = WebUtils.toString(loginedUser);
+//		model.addAttribute("userInfo", userInfo);
+//
+//		return "userInfoPage";
+//	}
+//
+
 }
