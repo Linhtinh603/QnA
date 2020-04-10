@@ -51,13 +51,16 @@ public class UserController {
 //	this.userService.save(user);
 //	
 	@GetMapping("/")
-	public String home() {
+	public String home(Model model) {
+		List<CategoryModel> listCategory = categoryService.findAll();
+//		listCategory.add(new CategoryModel("Khác"));
+		model.addAttribute("categories", listCategory);
 		return "user/home";
 	}
 
 	@GetMapping("/search")
 	public String search(@RequestParam(required = false) String key, @RequestParam(required = false) String category) {
-		return "user/search";
+		return "user/home";
 	}
 
 	@GetMapping("/questions/new")

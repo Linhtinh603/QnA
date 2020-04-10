@@ -3,13 +3,14 @@ package vn.edu.iuh.qna.utils;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 
+import lombok.experimental.UtilityClass;
 import vn.edu.iuh.qna.dto.UserDetailRequestDto;
 
+@UtilityClass
 public class WebUtils {
 
-	public static String toString(UserDetailRequestDto user) {
+	public String toString(UserDetailRequestDto user) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("UserName:").append(user.getUsername());

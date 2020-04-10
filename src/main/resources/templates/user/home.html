@@ -1,5 +1,121 @@
-<div xmlns:th="http://www.thymeleaf.org" th:replace="user\_layout :: base(content=~{::section})">
-	<section>
-		võ văn Hữu
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="user\_layout :: base(content=~{::section})">
+	<section class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 col-sm-12 mt-3">
+				<nav class="nav nav-pills flex-column ">
+					<a class="nav-item nav-link active" th:href="@{/}">Tất cả</a> <a
+						th:each="category : ${categories}" class="nav-item nav-link"
+						th:text="${category.name}"
+						th:href="@{/search(category=${category.id})}"></a>
+				</nav>
+			</div>
+			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
+				<a
+					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark"
+					href="/questions/abc">
+					<div class="col-1 text-center">
+						1<br>Câu trả lời
+					</div>
+					<div class="col-1 text-center">
+						10<br>quan tâm
+					</div>
+					<div class="col-1 text-center">
+						120<br>lượt xem
+					</div>
+					<div class="col-9">
+						<div class="row">
+							<div class="col-12">
+								<span class="font-weight-bold">Làm sao để cập nhật phần
+									mềm diệt vi rút</span>
+							</div>
+						</div>
+						<div class="row justify-content-end">
+							<span>24/02/2020, 12h30</span>
+						</div>
+					</div>
+				</a> <a
+					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark"
+					href="/questions/abc">
+					<div class="col-1 text-center">
+						1<br>Câu trả lời
+					</div>
+					<div class="col-1 text-center">
+						10<br>quan tâm
+					</div>
+					<div class="col-1 text-center">
+						120<br>lượt xem
+					</div>
+					<div class="col-9">
+						<div class="row">
+							<div class="col-12">
+								<span class="font-weight-bold">Làm sao để cập nhật phần
+									mềm diệt vi rút</span>
+							</div>
+						</div>
+						<div class="row justify-content-end">
+							<span>24/02/2020, 12h30</span>
+						</div>
+					</div>
+				</a> <a
+					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark"
+					href="/questions/abc">
+					<div class="col-1 text-center">
+						1<br>Câu trả lời
+					</div>
+					<div class="col-1 text-center">
+						10<br>quan tâm
+					</div>
+					<div class="col-1 text-center">
+						120<br>lượt xem
+					</div>
+					<div class="col-9">
+						<div class="row">
+							<div class="col-12">
+								<span class="font-weight-bold">Làm sao để cập nhật phần
+									mềm diệt vi rút</span>
+							</div>
+						</div>
+						<div class="row justify-content-end">
+							<span>24/02/2020, 12h30</span>
+						</div>
+					</div>
+				</a> <a
+					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark"
+					href="/questions/abc">
+					<div class="col-1 text-center">
+						1<br>Câu trả lời
+					</div>
+					<div class="col-1 text-center">
+						10<br>quan tâm
+					</div>
+					<div class="col-1 text-center">
+						120<br>lượt xem
+					</div>
+					<div class="col-9">
+						<div class="row">
+							<div class="col-12">
+								<span class="font-weight-bold">Làm sao để cập nhật phần
+									mềm diệt vi rút</span>
+							</div>
+						</div>
+						<div class="row justify-content-end">
+							<span>24/02/2020, 12h30</span>
+						</div>
+					</div>
+				</a>
+				<nav class="mt-5" aria-label="Page navigation example">
+					<ul class="pagination justify-content-center">
+						<li class="page-item disabled"><a class="page-link" href="#"
+							tabindex="-1">Previous</a></li>
+						<li class="page-item"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item"><a class="page-link" href="#">Next</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
 	</section>
 </div>
