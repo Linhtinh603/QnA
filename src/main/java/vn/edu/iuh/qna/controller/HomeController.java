@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import vn.edu.iuh.qna.dto.UserDetailRequestDto;
 import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.repository.UserRepository;
 import vn.edu.iuh.qna.utils.WebUtils;
@@ -26,7 +27,7 @@ public class HomeController {
 	public String accessDenied(Model model, Principal principal) {
 
 		if (principal != null) {
-			User loginedUser = (User) ((Authentication) principal).getPrincipal();
+			UserDetailRequestDto loginedUser = (UserDetailRequestDto) ((Authentication) principal).getPrincipal();
 
 			String userInfo = WebUtils.toString(loginedUser);
 

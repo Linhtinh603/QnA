@@ -12,7 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import vn.edu.iuh.qna.service.UserDetailsServiceImpl;
+import vn.edu.iuh.qna.service.impl.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -30,9 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-
-		// Sét đặt dịch vụ để tìm kiếm User trong Database.
-		// Và sét đặt PasswordEncoder.
+		auth.inMemoryAuthentication().withUser("huu").password(passwordEncoder().encode("123")).roles("ADMIN");
 		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
 
 	}
@@ -43,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 
 		// Các trang không yêu cầu login
-		http.authorizeRequests().antMatchers("/", "/login", "/logout").permitAll();
+		http.authorizeRequests().antMatchers("/login", "/logout").anonymous();
 
 		// Trang /userInfo yêu cầu phải login với vai trò ROLE_USER hoặc ROLE_ADMIN.
 		// Nếu chưa login, nó sẽ redirect tới trang /login.

@@ -2,7 +2,6 @@ package vn.edu.iuh.qna.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale.Category;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -39,5 +38,5 @@ public class QuestionModel {
 	private LocalDateTime updateTime;
 	private List<AnswerModel> answers;
 	@DBRef
-	private Category category;
+	private CategoryModel category;
 }

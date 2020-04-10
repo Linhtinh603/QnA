@@ -1,6 +1,9 @@
 <!DOCTYPE>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="base(content)">
-<head th:replace="_head">
+<head th:replace="_head(links=~{::link},script=~{::script})">
+	<link rel="stylesheet" th:href="@{/static/css/jquery.dataTables.min.css}" />
+	<link rel="stylesheet" th:href="@{/static/css/admin.css}" />
+	<script th:src="@{/static/js/admin.js}" defer></script>
 </head>
 <nav th:replace="admin/_menu"></nav>
 <div th:replace="${content}"></div>

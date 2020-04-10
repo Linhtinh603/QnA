@@ -1,5 +1,78 @@
-<div xmlns:th="http://www.thymeleaf.org" th:replace="admin\_layout :: base(content=~{::section})">
-	<section>
-		võ văn Hữu
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="admin\_layout :: base(content=~{::section})">
+	<section class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 col-sm-12 mt-3">
+				<nav class="nav nav-pills flex-column ">
+					<a class="nav-item nav-link active" th:href="@{/admin/}">Thống
+						kê</a> <a class="nav-item nav-link" th:href="@{/admin/manage_account}">Quản lý tài khoản</a>
+				</nav>
+			</div>
+			<div class="col-md-10 col-sm-12 mt-5">
+				<div class="row justify-content-between">
+					<div class="col-4">
+<!-- 						<form class="form-inline"> -->
+<!-- 							<div class="form-group mx-sm-3 mb-2"> -->
+<!-- 								<label for="userName" class="sr-only">Tên người dùng</label> <input -->
+<!-- 									type="text" class="form-control" id="userName"> -->
+<!-- 							</div> -->
+<!-- 							<button type="submit" class="btn btn-primary mb-2">Lọc -->
+<!-- 								tên</button> -->
+<!-- 						</form> -->
+					</div>
+					<div class="col-8">
+						<form class="form-inline justify-content-end">
+							<div class="form-group mb-2">
+								<label for="fromDate" class="sr-only">Từ ngày</label> <input
+									class="form-control" id="fromDate" type="date" />
+							</div>
+							<div class="form-group mx-sm-3 mb-2">
+								<label for="toDate" class="sr-only">Đến ngày</label> <input
+									class="form-control" id="toDate" type="date" />
+							</div>
+							<button type="submit" class="btn btn-primary mb-2">Lọc
+								ngày</button>
+						</form>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<table id="tableAdmin" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th scope="col">Người dùng</th>
+									<th scope="col">Số câu hỏi</th>
+									<th scope="col">Số câu trả lời</th>
+									<th scope="col">Số câu trả lời được chấp nhận</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">huuvv</th>
+									<td>4</td>
+									<td>10</td>
+									<td>5</td>
+								</tr>
+								<tr>
+									<th scope="row">hunglv</th>
+									<td>0</td>
+									<td>5</td>
+									<td>1</td>
+								</tr>
+								<tr>
+									<th scope="row">lualt</th>
+									<td>1</td>
+									<td>2</td>
+									<td>1</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-2 offset-10 d-flex justify-content-end">
+						<button class="btn btn-info">Xuất excel</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</section>
 </div>

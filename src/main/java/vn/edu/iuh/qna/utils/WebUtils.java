@@ -5,9 +5,11 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import vn.edu.iuh.qna.dto.UserDetailRequestDto;
+
 public class WebUtils {
 
-	public static String toString(User user) {
+	public static String toString(UserDetailRequestDto user) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("UserName:").append(user.getUsername());

@@ -21,4 +21,9 @@ public class CategoryModel {
 	@Id
 	private String id;
 	private String name;
+	public CategoryModel(String name) {
+		super();
+		this.name = name;
+	}
+	
 }

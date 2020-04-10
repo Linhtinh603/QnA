@@ -17,7 +17,7 @@ import vn.edu.iuh.qna.entity.UserModel;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDetailRequest implements UserDetails {
+public class UserDetailRequestDto implements UserDetails {
 	/**
 	 * 
 	 */
@@ -25,7 +25,7 @@ public class UserDetailRequest implements UserDetails {
 	private UserModel user;
 	
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
+	public Collection<GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> grantList=Arrays.asList(new SimpleGrantedAuthority(user.getRole()));
 		return grantList;
 	}
@@ -47,12 +47,12 @@ public class UserDetailRequest implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return user.isStatus();
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
