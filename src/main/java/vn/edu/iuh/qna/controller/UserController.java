@@ -1,16 +1,16 @@
 package vn.edu.iuh.qna.controller;
 
-import java.security.Principal;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -24,14 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import vn.edu.iuh.qna.dto.UserDetailRequestDto;
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
-import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.service.CategoryService;
 import vn.edu.iuh.qna.service.QuestionService;
 import vn.edu.iuh.qna.service.UserService;
-import vn.edu.iuh.qna.utils.EncrytedPasswordUtils;
 import vn.edu.iuh.qna.utils.StringUtils;
 
-//@Secured("ROLE_USER")
+@Secured("ROLE_USER")
 @Controller
 public class UserController {
 	@Autowired
@@ -51,10 +49,12 @@ public class UserController {
 //	this.userService.save(user);
 //	
 	@GetMapping("/")
-	public String home(Model model) {
+	public String home(Model model, @RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "5") int size) {
 		List<CategoryModel> listCategory = categoryService.findAll();
-//		listCategory.add(new CategoryModel("Khác"));
 		model.addAttribute("categories", listCategory);
+		Page<QuestionModel> listQuestion = questionService.findAll(PageRequest.of(page-1, size));
+		model.addAttribute("questions", listQuestion);
 		return "user/home";
 	}
 
@@ -66,7 +66,6 @@ public class UserController {
 	@GetMapping("/questions/new")
 	public String createQuestion(Model model) {
 		List<CategoryModel> listCategory = categoryService.findAll();
-//		listCategory.add(new CategoryModel("Khác"));
 		model.addAttribute("categories", listCategory);
 		model.addAttribute("question", new QuestionModel());
 		return "user/create_question";
@@ -81,10 +80,10 @@ public class UserController {
 		}
 		UserDetailRequestDto userDetail = (UserDetailRequestDto) principal;
 		question.setAuthor(userDetail.getUser());
-		question.setCreateTime(LocalDateTime.now());
+		question.setCreateTime(new Date());
 		question.setStatus(true);
 		question.setTitleNormalized(StringUtils.normalize(question.getTitle()));
-		question.setUpdateTime(LocalDateTime.now());
+		question.setUpdateTime(new Date());
 		question.setView(0);
 		questionService.save(question);
 		return new ResponseEntity<String>(HttpStatus.CREATED);
@@ -93,7 +92,6 @@ public class UserController {
 	@GetMapping("/questions/{id}")
 	public String viewQuestion(Model model) {
 		List<CategoryModel> listCategory = categoryService.findAll();
-//		listCategory.add(new CategoryModel("Khác"));
 		model.addAttribute("categories", listCategory);
 		return "user/view_question";
 	}
@@ -104,12 +102,11 @@ public class UserController {
 			return "redirect:/";
 		}
 		Optional<QuestionModel> question = questionService.finById(id);
-		
+
 		if (!question.isPresent() || question.get().isStatus() == false) {
 			return "redirect:/";
 		}
 		List<CategoryModel> listCategory = categoryService.findAll();
-//		listCategory.add(new CategoryModel("Khác"));
 		model.addAttribute("categories", listCategory);
 		model.addAttribute("question", question.get());
 		return "user/edit_question";
@@ -129,11 +126,11 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Optional<QuestionModel> originQuestion = questionService.finById(question.getId());
-//		if (!originQuestion. ) {
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
+		if (!originQuestion.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		originQuestion.get().setTitleNormalized(StringUtils.normalize(question.getTitle()));
-		originQuestion.get().setUpdateTime(LocalDateTime.now());
+		originQuestion.get().setUpdateTime(new Date());
 		originQuestion.get().setCategory(question.getCategory());
 		originQuestion.get().setContent(question.getContent());
 		questionService.save(originQuestion.get());

@@ -1,12 +1,13 @@
 package vn.edu.iuh.qna.entity;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -34,8 +35,12 @@ public class QuestionModel {
 	private UserModel author;
 	private int view;
 	private boolean status;
-	private LocalDateTime createTime;
-	private LocalDateTime updateTime;
+	private boolean isMarked;
+	private boolean resolved;
+	private long follower;
+	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	private Date createTime;
+	private Date updateTime;
 	private List<AnswerModel> answers;
 	@DBRef
 	private CategoryModel category;

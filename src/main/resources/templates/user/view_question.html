@@ -1,5 +1,5 @@
 <div xmlns:th="http://www.thymeleaf.org" th:replace="user\_layout :: base(content=~{::section})">
-	<section>
+	<section class="container-fluid">
 		<div class="row">
 			<div class="col-md-2 col-sm-12 mt-3">
 				<nav class="nav nav-pills flex-column ">
@@ -10,12 +10,22 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
-				<h4>Làm sao để cập nhật phần mềm diệt virus? <i class="">♥</i></h4>
+				<h4>Làm sao để cập nhật phần mềm vi rút? <i class=""></i></h4>
 				<div class="row border-bottom border-dark">
 					<a href="category" class="col-auto">Category</a>
-					<div class="col-auto font-italic text-danger">124 lượt xem</div>
+					<div class="col-auto font-italic text-danger">124 Lượt xem xem</div>
 					<div class="col-auto font-italic text-danger">Tạo bởi HuuVV</div>
-					<div class="col d-flex justify-content-center">◘◘◘</div>
+					<div class="col d-flex justify-content-center">
+						<div class="dropdown">
+						  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    Tùy chọn
+						  </button>
+						  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						    <a class="dropdown-item" href="#">Chỉnh sửa</a>
+						    <a class="dropdown-item" href="#">Xóa</a>
+						  </div>
+						</div>
+					</div>
 				</div>
 
 				<table class="mt-4 shadow-sm rounded .bg-secondary">
@@ -33,33 +43,33 @@
 				<table class="mt-3 border-bottom border-secondary">
 					<tbody>
 						<tr>
-							<td class="align-middle"><i>◘Tick◘</i></td>
+							<td class="align-middle"><i class="fas fa-check fa-3x"></i></td>
 							<td>Tight pants next level keffiyeh you probably haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel have a terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan whatever keytar, scenester farm-to-table banksy Austin twitter handle freegan cred raw denim single-origin coffee viral.
 							</td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>
 				<table class="mt-3 border-bottom border-secondary">
 					<tbody>
 						<tr>
-							<td class="align-middle"><i>◘Tick◘</i></td>
+							<td class="align-middle"><i class="fas fa-check fa-3x"></i></td>
 							<td>Tight pants next level keffiyeh you probably haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel have a terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan whatever keytar, scenester farm-to-table banksy Austin twitter handle freegan cred raw denim single-origin coffee viral.
 							</td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>
 				<div>Câu trả lời của bạn</div>
 				<div><textarea class="w-75 mh-100 mb-3 "style="height: 100px"></textarea></div>
 				<button class="btn btn-secondary">Hủy</button>
-				<button class="btn btn-success">Gửi câu hỏi</button>
+				<button class="btn btn-success">Gửi câu trả lời</button>
 
 			</div>
 		</div>
