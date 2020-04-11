@@ -31,7 +31,7 @@ import vn.edu.iuh.qna.service.UserService;
 import vn.edu.iuh.qna.utils.EncrytedPasswordUtils;
 import vn.edu.iuh.qna.utils.StringUtils;
 
-@Secured("ROLE_USER")
+//@Secured("ROLE_USER")
 @Controller
 public class UserController {
 	@Autowired
@@ -91,7 +91,10 @@ public class UserController {
 	}
 
 	@GetMapping("/questions/{id}")
-	public String viewQuestion() {
+	public String viewQuestion(Model model) {
+		List<CategoryModel> listCategory = categoryService.findAll();
+//		listCategory.add(new CategoryModel("Khác"));
+		model.addAttribute("categories", listCategory);
 		return "user/view_question";
 	}
 
@@ -101,7 +104,8 @@ public class UserController {
 			return "redirect:/";
 		}
 		Optional<QuestionModel> question = questionService.finById(id);
-		if (question.isEmpty() || question.get().isStatus() == false) {
+		
+		if (!question.isPresent() || question.get().isStatus() == false) {
 			return "redirect:/";
 		}
 		List<CategoryModel> listCategory = categoryService.findAll();
@@ -125,9 +129,9 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		Optional<QuestionModel> originQuestion = questionService.finById(question.getId());
-		if (originQuestion.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+//		if (!originQuestion. ) {
+//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//		}
 		originQuestion.get().setTitleNormalized(StringUtils.normalize(question.getTitle()));
 		originQuestion.get().setUpdateTime(LocalDateTime.now());
 		originQuestion.get().setCategory(question.getCategory());
