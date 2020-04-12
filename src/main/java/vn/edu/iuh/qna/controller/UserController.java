@@ -95,6 +95,13 @@ public class UserController {
 		model.addAttribute("categories", listCategory);
 		return "user/view_question";
 	}
+	
+	@GetMapping("/questions/reply")
+	public String replyQuestion(Model model) {
+		List<CategoryModel> listCategory = categoryService.findAll();
+		model.addAttribute("categories", listCategory);
+		return "user/reply_question";
+	}
 
 	@GetMapping("/questions/edit/{id}")
 	public String editQuestion(Model model, @PathVariable String id) {
@@ -142,8 +149,9 @@ public class UserController {
 		return "user/posted_questions";
 	}
 
-	@GetMapping("/my_profile/posted_questions")
+	@GetMapping("/my_profile/star_questions")
 	public String starQuestion() {
+		
 		return "user/star_questions";
 	}
 

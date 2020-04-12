@@ -1,5 +1,73 @@
 <div xmlns:th="http://www.thymeleaf.org" th:replace="user\_layout :: base(content=~{::section})">
 	<section>
-		võ văn Hữu
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Home</a></li>
+				<li class="breadcrumb-item"><a href="#">Trang cá nhân</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Danh sách câu hỏi đã đăng</li>
+			</ol>
+		</nav>
+		<div class="row m-3">
+			<div class="col-2 list-group list-group-flush">
+				<a href="../my_profile/posted_questions" class="list-group-item list-group-item-action active">Câu hỏi đã đăng</a>
+				<a href="../my_profile/star_questions" class="list-group-item list-group-item-action ">Câu hỏi đã theo dõi</a>
+			</div>
+			<div class="col">
+				<div class="d-none"> Không có câu hỏi đã theo dõi tronh danh sách</div>
+				<table class="table table-bordered table-hover">
+					<thead><th>STT</th><th>Câu hỏi</th><th>Số câu trả lời</th><th>Đã có câu trả lời giải quyết</th><th>Thời gian đăng</th></thead>
+					<tbody >
+						<tr>						
+								<td>1</td>
+								<td><a href="#" >Làm sao để cập nhật phần mềm diệt virus</a></td>
+								<td>15</td>
+								<td class="text-danger">Chưa có</td>
+								<td>24-5-2020 21h20</td>							
+						</tr>	
+						<tr>
+							<td>2</td>
+							<td><a href="#">Tôi muốn hỗ trợ từ phía IT để cài lại windows thì làm sao?</a></td>
+							<td>5</td>
+							<td class="text-success">Đã có</td>
+							<td>24-5-2020 21h20</td>			
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- <nav class="mt-5" aria-label="Pagination" th:if="${questions.totalPages gt 0}">
+					<ul class="pagination justify-content-center font-weight-medium">
+						<li class="page-item"
+							th:classappend="${questions.number eq 0} ? 'disabled'"><a
+							class="page-link svg-icon"
+							th:href="@{/(page=${questions.number lt 2 ? 1 : questions.number})}"
+							aria-label="Previous" title="Previous Page" rel="tooltip"> <span
+								aria-hidden="true" data-feather="chevrons-left" width="20"
+								height="20">Trang trước</span>
+						</a></li>
+						<li class="page-item"
+							th:classappend="${i eq questions.number + 1} ? 'active'"
+							th:each="i : ${#numbers.sequence( questions.number + 1, questions.totalPages > 10 + questions.number ? questions.number + 10 : questions.totalPages, 1)}">
+							<a class="page-link"
+							th:href="@{/(page=${i})}" th:text="${i}"
+							th:title="${'Page '+ i}" rel="tooltip"></a>
+						</li>
+						<li class="page-item disabled"
+							th:if="${questions.number + 10 < questions.totalPages}"><a
+							class="page-link svg-icon" href="#"> <span
+								data-feather="more-horizontal" width="20" height="20"></span>
+						</a></li>
+						<li class="page-item"
+							th:classappend="${questions.number + 1 eq questions.totalPages} ? 'disabled'">
+							<a class="page-link svg-icon"
+							th:href="@{/(page=${questions.number + 2})}"
+							aria-label="Next" title="Next Page" rel="tooltip"> <span
+								aria-hidden="true" data-feather="chevrons-right" width="20"
+								height="20">Trang kế tiếp</span>
+						</a>
+						</li>
+					</ul>
+				</nav> -->
+			</div>
+		</div>
 	</section>
 </div>
