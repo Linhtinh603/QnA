@@ -10,25 +10,25 @@
 		<div class="row m-3">
 			<div class="col-2 list-group list-group-flush">
 				<a href="../my_profile/posted_questions" class="list-group-item list-group-item-action active">Câu hỏi đã đăng</a>
-				<a href="../my_profile/star_questions" class="list-group-item list-group-item-action ">Câu hỏi đã theo dõi</a>
+				<a href="../my_profile/star_questions" class="list-group-item list-group-item-action ">Câu hỏi theo dõi</a>
 			</div>
 			<div class="col">
-				<div class="d-none"> Không có câu hỏi đã theo dõi tronh danh sách</div>
+				<div class="d-none"> KhÃ´ng cÃ³ cÃ¢u há»�i Ä‘Ã£ theo dÃµi tronh danh sÃ¡ch</div>
 				<table class="table table-bordered table-hover">
-					<thead><th>STT</th><th>Câu hỏi</th><th>Số câu trả lời</th><th>Đã có câu trả lời giải quyết</th><th>Thời gian đăng</th></thead>
+					<thead><th>STT</th><th>CÃ¢u há»�i</th><th>Sá»‘ cÃ¢u tráº£ lá»�i</th><th>Ä�Ã£ cÃ³ cÃ¢u tráº£ lá»�i giáº£i quyáº¿t</th><th>Thá»�i gian Ä‘Äƒng</th></thead>
 					<tbody >
 						<tr>						
 								<td>1</td>
-								<td><a href="#" >Làm sao để cập nhật phần mềm diệt virus</a></td>
+								<td><a href="#" >LÃ m sao Ä‘á»ƒ cáº­p nháº­t pháº§n má»�m diá»‡t virus</a></td>
 								<td>15</td>
-								<td class="text-danger">Chưa có</td>
+								<td class="text-danger">ChÆ°a cÃ³</td>
 								<td>24-5-2020 21h20</td>							
 						</tr>	
 						<tr>
 							<td>2</td>
-							<td><a href="#">Tôi muốn hỗ trợ từ phía IT để cài lại windows thì làm sao?</a></td>
+							<td><a href="#">TÃ´i muá»‘n há»— trá»£ tá»« phÃ­a IT Ä‘á»ƒ cÃ i láº¡i windows thÃ¬ lÃ m sao?</a></td>
 							<td>5</td>
-							<td class="text-success">Đã có</td>
+							<td class="text-success">Ä�Ã£ cÃ³</td>
 							<td>24-5-2020 21h20</td>			
 						</tr>
 					</tbody>
@@ -42,7 +42,7 @@
 							th:href="@{/(page=${questions.number lt 2 ? 1 : questions.number})}"
 							aria-label="Previous" title="Previous Page" rel="tooltip"> <span
 								aria-hidden="true" data-feather="chevrons-left" width="20"
-								height="20">Trang trước</span>
+								height="20">Trang trÆ°á»›c</span>
 						</a></li>
 						<li class="page-item"
 							th:classappend="${i eq questions.number + 1} ? 'active'"
@@ -62,7 +62,7 @@
 							th:href="@{/(page=${questions.number + 2})}"
 							aria-label="Next" title="Next Page" rel="tooltip"> <span
 								aria-hidden="true" data-feather="chevrons-right" width="20"
-								height="20">Trang kế tiếp</span>
+								height="20">Trang káº¿ tiáº¿p</span>
 						</a>
 						</li>
 					</ul>

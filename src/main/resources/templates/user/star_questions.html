@@ -1,33 +1,33 @@
 <div xmlns:th="http://www.thymeleaf.org" th:replace="user\_layout :: base(content=~{::section})">
-	<section>
+	<section class="container-fluid">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="#">Home</a></li>
-				<li class="breadcrumb-item"><a href="#">Trang cÃ¡ nhÃ¢n</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Danh sÃ¡ch cÃ¢u há»�i theo dÃµi</li>
+				<li class="breadcrumb-item"><a href="#">Trang cá nhân</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Danh sách câu hỏi theo dõi</li>
 			</ol>
 		</nav>
 		<div class="row m-3">
 			<div class="col-2 list-group list-group-flush">
-				<a href="../my_profile/posted_questions" class="list-group-item list-group-item-action">CÃ¢u há»�i Ä‘Ã£ Ä‘Äƒng</a>
-				<a href="../my_profile/star_questions" class="list-group-item list-group-item-action active">CÃ¢u há»�i Ä‘Ã£ theo dÃµi</a>
+				<a href="../my_profile/posted_questions" class="list-group-item list-group-item-action">Câu hỏi đã đăng</a>
+				<a href="../my_profile/star_questions" class="list-group-item list-group-item-action active">Câu hỏi theo dõi</a>
 			</div>
 			<div class="col">
-				<div class="d-none"> KhÃ´ng cÃ³ cÃ¢u há»�i Ä‘Ã£ theo dÃµi tronh danh sÃ¡ch</div>
+				<div class="d-none"> KhÃƒÂ´ng cÃƒÂ³ cÃƒÂ¢u hÃ¡Â»ï¿½i Ã„â€˜ÃƒÂ£ theo dÃƒÂµi tronh danh sÃƒÂ¡ch</div>
 				<table class="table table-bordered table-hover">
-					<thead><th>STT</th><th>CÃ¢u há»�i</th><th>Sá»‘ cÃ¢u tráº£ lá»�i</th><th>Ä�Ã£ cÃ³ cÃ¢u tráº£ lá»�i giáº£i quyáº¿t</th></thead>
+					<thead><th>STT</th><th>CÃƒÂ¢u hÃ¡Â»ï¿½i</th><th>SÃ¡Â»â€˜ cÃƒÂ¢u trÃ¡ÂºÂ£ lÃ¡Â»ï¿½i</th><th>Ã„ï¿½ÃƒÂ£ cÃƒÂ³ cÃƒÂ¢u trÃ¡ÂºÂ£ lÃ¡Â»ï¿½i giÃ¡ÂºÂ£i quyÃ¡ÂºÂ¿t</th></thead>
 					<tbody >
 						<tr>						
 								<td>1</td>
-								<td><a href="#" >LÃ m sao Ä‘á»ƒ cáº­p nháº­t pháº§n má»�m diá»‡t virus</a></td>
+								<td><a href="#" >LÃƒ m sao Ã„â€˜Ã¡Â»Æ’ cÃ¡ÂºÂ­p nhÃ¡ÂºÂ­t phÃ¡ÂºÂ§n mÃ¡Â»ï¿½m diÃ¡Â»â€¡t virus</a></td>
 								<td>15</td>
-								<td class="text-danger">ChÆ°a cÃ³</td>							
+								<td class="text-danger">ChÃ†Â°a cÃƒÂ³</td>							
 						</tr>	
 						<tr>
 							<td>2</td>
-							<td><a href="#">TÃ´i muá»‘n há»— trá»£ tá»« phÃ­a IT Ä‘á»ƒ cÃ i láº¡i windows thÃ¬ lÃ m sao?</a></td>
+							<td><a href="#">TÃƒÂ´i muÃ¡Â»â€˜n hÃ¡Â»â€” trÃ¡Â»Â£ tÃ¡Â»Â« phÃƒÂ­a IT Ã„â€˜Ã¡Â»Æ’ cÃƒ i lÃ¡ÂºÂ¡i windows thÃƒÂ¬ lÃƒ m sao?</a></td>
 							<td>5</td>
-							<td class="text-success">Ä�Ã£ cÃ³</td>
+							<td class="text-success">Ã„ï¿½ÃƒÂ£ cÃƒÂ³</td>
 						</tr>
 					</tbody>
 				</table>
@@ -40,7 +40,7 @@
 							th:href="@{/(page=${questions.number lt 2 ? 1 : questions.number})}"
 							aria-label="Previous" title="Previous Page" rel="tooltip"> <span
 								aria-hidden="true" data-feather="chevrons-left" width="20"
-								height="20">Trang trÆ°á»›c</span>
+								height="20">Trang trÃ†Â°Ã¡Â»â€ºc</span>
 						</a></li>
 						<li class="page-item"
 							th:classappend="${i eq questions.number + 1} ? 'active'"
@@ -60,7 +60,7 @@
 							th:href="@{/(page=${questions.number + 2})}"
 							aria-label="Next" title="Next Page" rel="tooltip"> <span
 								aria-hidden="true" data-feather="chevrons-right" width="20"
-								height="20">Trang káº¿ tiáº¿p</span>
+								height="20">Trang kÃ¡ÂºÂ¿ tiÃ¡ÂºÂ¿p</span>
 						</a>
 						</li>
 					</ul>
