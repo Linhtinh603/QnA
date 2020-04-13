@@ -11,23 +11,24 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
+				<h1 class="mb-4">Kết quả tìm kiếm cho <span class="font-weight-bold" th:text="${key}"></span></h1>
 				<!-- 				<a -->
 				<!-- 				class="row mb-3 shadow rounded p-3 text-decoration-none text-dark border border-success" -->
 				<!-- 				href="/questions/abc"> -->
 				<!-- 				<div class="col-1 px-0 text-center text-success"> -->
-				<!-- 					1<br>Câu trả lời -->
+				<!-- 					1<br>CÃ¢u tráº£ lá»�i -->
 				<!-- 				</div> -->
 				<!-- 				<div class="col-1 px-0 text-center"> -->
-				<!-- 					10<br>quan tâm -->
+				<!-- 					10<br>quan tÃ¢m -->
 				<!-- 				</div> -->
 				<!-- 				<div class="col-1 px-0 text-center"> -->
-				<!-- 					120<br>lượt xem -->
+				<!-- 					120<br>lÆ°á»£t xem -->
 				<!-- 				</div> -->
 				<!-- 				<div class="col-9"> -->
 				<!-- 					<div class="row"> -->
 				<!-- 						<div class="col-12"> -->
-				<!-- 							<span class="font-weight-bold">Làm sao để cập nhật phần -->
-				<!-- 								mềm diệt vi rút</span> -->
+				<!-- 							<span class="font-weight-bold">LÃ m sao Ä‘á»ƒ cáº­p nháº­t pháº§n -->
+				<!-- 								má»�m diá»‡t vi rÃºt</span> -->
 				<!-- 						</div> -->
 				<!-- 					</div> -->
 				<!-- 					<div class="row justify-content-end"> -->
@@ -35,13 +36,13 @@
 				<!-- 					</div> -->
 				<!-- 				</div> -->
 				<!-- 			</a> -->
-				<a th:each="question : ${questions}"
+				<p th:if="${questions.getTotalElements()==0}">Rất tiếc không có kết quả nào</p>
+				<a  th:each="question : ${questions}"
 					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.resolved} ? 'border border-success'"
 					th:href="@{'/questions/'+${question.id}}">
 					<div class="col-1 px-0 text-center" th:classappend="${question.resolved} ? 'text-success'">
 						<span
-							th:text="${#lists.isEmpty(question.answers)?'0':#lists.size(question.answers)}"></span><br>Câu
-						trả lời
+							th:text="${#lists.isEmpty(question.answers)?'0':#lists.size(question.answers)}"></span><br>câu trả lời
 					</div>
 					<div class="col-1 px-0 text-center">
 						<span th:text="${question.follower}"></span><br>quan tâm
@@ -67,16 +68,16 @@
 						<li class="page-item"
 							th:classappend="${questions.number eq 0} ? 'disabled'"><a
 							class="page-link svg-icon"
-							th:href="@{/(page=${questions.number lt 2 ? 1 : questions.number},category=${categoryId})}"
+							th:href="@{/search(page=${questions.number lt 2 ? 1 : questions.number},key=${key})}"
 							aria-label="Previous" title="Previous Page" rel="tooltip"> <span
 								aria-hidden="true" data-feather="chevrons-left" width="20"
-								height="20">Trang trước</span>
+								height="20">Trang trước đó</span>
 						</a></li>
 						<li class="page-item"
 							th:classappend="${i eq questions.number + 1} ? 'active'"
 							th:each="i : ${#numbers.sequence( questions.number + 1, questions.totalPages > 10 + questions.number ? questions.number + 10 : questions.totalPages, 1)}">
 							<a class="page-link"
-							th:href="@{/(page=${i},category=${categoryId})}" th:text="${i}"
+							th:href="@{/search(page=${i},key=${key})}" th:text="${i}"
 							th:title="${'Page '+ i}" rel="tooltip"></a>
 						</li>
 						<li class="page-item disabled"
@@ -87,10 +88,10 @@
 						<li class="page-item"
 							th:classappend="${questions.number + 1 eq questions.totalPages} ? 'disabled'">
 							<a class="page-link svg-icon"
-							th:href="@{/(page=${questions.number + 2},category=${categoryId})}"
+							th:href="@{/search(page=${questions.number + 2},key=${key})}"
 							aria-label="Next" title="Next Page" rel="tooltip"> <span
 								aria-hidden="true" data-feather="chevrons-right" width="20"
-								height="20">Trang kế tiếp</span>
+								height="20">Trang tiếp theo</span>
 						</a>
 						</li>
 					</ul>
