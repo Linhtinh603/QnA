@@ -35,7 +35,6 @@ public class QuestionModel {
 	private UserModel author;
 	private int view;
 	private boolean status;
-	private boolean isMarked;
 	private boolean resolved;
 	private long follower;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")

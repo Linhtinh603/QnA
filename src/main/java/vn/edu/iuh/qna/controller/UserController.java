@@ -26,7 +26,6 @@ import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.service.CategoryService;
 import vn.edu.iuh.qna.service.QuestionService;
-import vn.edu.iuh.qna.service.UserService;
 import vn.edu.iuh.qna.utils.StringUtils;
 
 @Secured("ROLE_USER")
@@ -36,31 +35,41 @@ public class UserController {
 	private CategoryService categoryService;
 	@Autowired
 	private QuestionService questionService;
-	@Autowired
-	private UserService userService;
 
-//	UserModel user=new UserModel();
-//	user.setEncrytedPassword(EncrytedPasswordUtils.encrytePassword("123"));
-//	user.setName("Huỳnh Cao Hữu Linh");
-//	user.setPosition("DEV 0");
-//	user.setRole("ROLE_USER");
-//	user.setStatus(true);
-//	user.setUserName("LinhHCH");
-//	this.userService.save(user);
-//	
 	@GetMapping("/")
-	public String home(Model model, @RequestParam(required = false, defaultValue = "1") int page,
+	public String home(Model model, @RequestParam(required = false, name = "category") String categoryId,
+			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "5") int size) {
 		List<CategoryModel> listCategory = categoryService.findAll();
 		model.addAttribute("categories", listCategory);
-		Page<QuestionModel> listQuestion = questionService.findAll(PageRequest.of(page-1, size));
+		Optional<CategoryModel> categoryOptional = Optional.empty();
+		if (categoryId != null) {
+			categoryOptional = listCategory.stream().filter(c -> c.getId().equals(categoryId)).findFirst();
+		}
+		Page<QuestionModel> listQuestion = null;
+		if (categoryOptional.isPresent()) {
+			model.addAttribute("categoryId", categoryOptional.get().getId());
+			listQuestion = questionService.findByCategory(categoryOptional.get(), PageRequest.of(page - 1, size));
+		} else {
+			listQuestion = questionService.findAll(PageRequest.of(page - 1, size));
+		}
 		model.addAttribute("questions", listQuestion);
 		return "user/home";
 	}
 
 	@GetMapping("/search")
-	public String search(@RequestParam(required = false) String key, @RequestParam(required = false) String category) {
-		return "user/home";
+	public String search(Model model, @RequestParam(required = false, name = "key") String key,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "2") int size) {
+		if (key == null || key.trim().equals("")) {
+			return "redirect:/";
+		}
+		model.addAttribute("key", key);
+		List<CategoryModel> listCategory = categoryService.findAll();
+		model.addAttribute("categories", listCategory);
+		Page<QuestionModel> listQuestion = questionService.findByTitleNormalizedContaining(StringUtils.normalize(key), PageRequest.of(page - 1, size));
+		model.addAttribute("questions", listQuestion);
+		return "user/search";
 	}
 
 	@GetMapping("/questions/new")

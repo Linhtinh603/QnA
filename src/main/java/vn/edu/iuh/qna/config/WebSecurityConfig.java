@@ -1,5 +1,12 @@
 package vn.edu.iuh.qna.config;
 
+import java.io.IOException;
+import java.util.Collection;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +15,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -21,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
-	
+
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -45,10 +56,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Trang /userInfo yêu cầu phải login với vai trò ROLE_USER hoặc ROLE_ADMIN.
 		// Nếu chưa login, nó sẽ redirect tới trang /login.
-		//http.authorizeRequests().antMatchers("/userInfo").access("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')");
+		// http.authorizeRequests().antMatchers("/userInfo").access("hasAnyRole('ROLE_USER',
+		// 'ROLE_ADMIN')");
 
 		// Trang chỉ dành cho ADMIN
-		//http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
+		// http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
 
 		// Khi người dùng đã login, với vai trò XX.
 		// Nhưng truy cập vào trang yêu cầu vai trò YY,
@@ -60,12 +72,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// Submit URL của trang login
 				.loginProcessingUrl("/j_spring_security_check") // Submit URL
 				.loginPage("/login")//
-				.defaultSuccessUrl("/userAccountInfo")//
-				.failureUrl("/login?error=true")//
+				// .defaultSuccessUrl("/userAccountInfo")//
+				.successHandler(authSucessHandler()).failureUrl("/login?error=true")//
 				.usernameParameter("username")//
 				.passwordParameter("password")
 				// Cấu hình cho Logout Page.
-				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful");
+				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/logout");
 
 		// Cấu hình Remember Me.
 		http.authorizeRequests().and() //
@@ -79,6 +91,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public PersistentTokenRepository persistentTokenRepository() {
 		InMemoryTokenRepositoryImpl memory = new InMemoryTokenRepositoryImpl();
 		return memory;
+	}
+
+	@Bean
+	public AuthenticationSuccessHandler authSucessHandler() {
+		return (request, response, authentication) -> {
+			if (response.isCommitted()) {
+				return;
+			}
+			Collection<? extends GrantedAuthority> authors = authentication.getAuthorities();
+			if (authors.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+				response.sendRedirect("/amdin");
+			} else {
+				response.sendRedirect("/");
+			}
+		};
 	}
 
 }
