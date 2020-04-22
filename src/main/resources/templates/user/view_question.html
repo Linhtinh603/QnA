@@ -1,4 +1,12 @@
-<div xmlns:th="http://www.thymeleaf.org" th:replace="user\_layout :: base(content=~{::section})">
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="user\_layout :: base(content=~{::section},scripts=~{::script})">
+	<script th:inline="javascript">
+			var originContentString = [[${question.content}]]
+			var originContent = JSON.parse(originContentString);
+			var questionId =  [[${question.id}]]
+			var userId = [[${userId}]]
+	</script>
+	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
 	<section class="container-fluid">
 		<div class="row">
 			<div class="col-md-2 col-sm-12 mt-3">
@@ -10,21 +18,26 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
-				<h4>Làm sao để cập nhật phần mềm vi rút? <i class=""></i></h4>
+				<h4 th:text="${question.title}">
+					Title <i class=""></i>
+				</h4>
 				<div class="row border-bottom border-dark">
-					<a href="category" class="col-auto">Category</a>
-					<div class="col-auto font-italic text-warning">124 Lượt xem xem</div>
-					<div class="col-auto font-italic text-warning">Tạo bởi HuuVV</div>
-					<div class="col-auto font-italic text-secondary">Chỉnh sửa lần cuối vào 26-4-2020 12h54</div>
+					<a th:text="${question.category.name}" th:href="@{search(category=${question.category.id})}" class="col-auto">Category</a>
+					<div th:text="${question.view} + ' lượt xem'" class="col-auto font-italic text-warning">124 Lượt xem
+						xem</div>
+					<div th:text="'Tạo bởi ' + ${question.author.fullName} + ' ('+${question.author.userName}+') '" 
+						class="col-auto font-italic text-warning">Tạo bởi HuuVV</div>
+					<div class="col-auto font-italic text-secondary">Chỉnh sửa
+						lần cuối vào 26-4-2020 12h54</div>
 					<div class="col d-flex justify-content-center">
 						<div class="dropdown">
-						  <span class="dropdown-toggle text-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						    Tùy chọn
-							</span>
-						  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						    <a class="dropdown-item text-warning" href="#">Chỉnh sửa</a>
-						    <a class="dropdown-item text-danger" href="#">Xóa</a>
-						  </div>
+							<span class="dropdown-toggle text-secondary" type="button"
+								id="dropdownMenuButton" data-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false"> Tùy chọn </span>
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+								<a class="dropdown-item text-warning" href="@{question/edit/question.id}">Chỉnh sửa</a> <a
+									class="dropdown-item text-danger" th:href="@{question/delete/question.id}">Xóa</a>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -32,45 +45,71 @@
 				<table class="mt-4 shadow-sm rounded .bg-secondary">
 					<tbody>
 						<tr>
-							<td class="p-2">Tight pants next level keffiyeh you probably haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel have a terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan whatever keytar, scenester farm-to-table banksy Austin twitter handle freegan cred raw denim single-origin coffee viral.
+							<td class="p-2">
+								<div id="editor"></div>
 							</td>
 						</tr>
 						<tr>
-							<td><div class="font-italic m-2 text-info">HuuVV đã hỏi lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div th:text="${question.author.fullName} + ' đã hỏi lúc ' + ${question.updateTime}" 
+								class="font-italic m-2 text-info">HuuVV đã
+									hỏi lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>
-				<div class="mt-3 text-monospace text-success font-weight-bold">Có 4 câu trả lời</div>
+				<div th:text="'Có ' + ${question.answers.size} + ' câu trả lời'" 
+					class="mt-3 text-monospace text-success font-weight-bold">Có
+					4 câu trả lời</div>
 				<table class="mt-3 border-bottom border-secondary">
 					<tbody>
 						<tr>
-							<td class="align-middle text-secondary"data-toggle="tooltip" data-placement="top" title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
+							<td class="align-middle text-secondary" data-toggle="tooltip"
+								data-placement="top"
+								title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
 								<i class="fas fa-check fa-3x"></i>
 							</td>
-							<td>Tight pants next level keffiyeh you probably haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel have a terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan whatever keytar, scenester farm-to-table banksy Austin twitter handle freegan cred raw denim single-origin coffee viral.
-							</td>
+							<td>Tight pants next level keffiyeh you probably haven't
+								heard of them. Photo booth beard raw denim letterpress vegan
+								messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie
+								sustainable quinoa 8-bit american apparel have a terry
+								richardson vinyl chambray. Beard stumptown, cardigans banh mi
+								lomo thundercats. Tofu biodiesel williamsburg marfa, four loko
+								mcsweeney's cleanse vegan chambray. A really ironic artisan
+								whatever keytar, scenester farm-to-table banksy Austin twitter
+								handle freegan cred raw denim single-origin coffee viral.</td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div class="font-italic m-2 text-info">HuuVV đã
+									trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>
 				<table class="mt-3 border-bottom border-secondary">
 					<tbody>
 						<tr>
-							<td class="align-middle text-secondary"><i class="fas fa-check fa-3x"></i></td>
-							<td>Tight pants next level keffiyeh you probably haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel have a terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan whatever keytar, scenester farm-to-table banksy Austin twitter handle freegan cred raw denim single-origin coffee viral.
-							</td>
+							<td class="align-middle text-secondary"><i
+								class="fas fa-check fa-3x"></i></td>
+							<td>Tight pants next level keffiyeh you probably haven't
+								heard of them. Photo booth beard raw denim letterpress vegan
+								messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie
+								sustainable quinoa 8-bit american apparel have a terry
+								richardson vinyl chambray. Beard stumptown, cardigans banh mi
+								lomo thundercats. Tofu biodiesel williamsburg marfa, four loko
+								mcsweeney's cleanse vegan chambray. A really ironic artisan
+								whatever keytar, scenester farm-to-table banksy Austin twitter
+								handle freegan cred raw denim single-origin coffee viral.</td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div class="font-italic m-2 text-info">HuuVV đã
+									trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>
 				<div>Câu trả lời của bạn</div>
-				<div><textarea class="w-75 mh-100 mb-3 "style="height: 100px"></textarea></div>
+				<div>
+					<textarea class="w-75 mh-100 mb-3 " style="height: 100px"></textarea>
+				</div>
 				<button class="btn btn-secondary">Hủy</button>
 				<button class="btn btn-success">Gửi câu trả lời</button>
 

@@ -90,9 +90,21 @@ public class UserController {
 	}
 
 	@GetMapping("/questions/{id}")
-	public String viewQuestion(Model model) {
+	public String viewQuestion(Model model, @PathVariable String id, Authentication authentication) {
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailRequestDto)) {
+			return "404Page";
+		}
+		UserDetailRequestDto userDetail = (UserDetailRequestDto) principal;
+		model.addAttribute("userId", userDetail.getUser().getId());
+		
 		List<CategoryModel> listCategory = categoryService.findAll();
 		model.addAttribute("categories", listCategory);
+		Optional<QuestionModel> question = questionService.finById(id);
+		if(question.get().isStatus() == false) {
+			return "404Page";
+		}
+		model.addAttribute("question",question.get());
 		return "user/view_question";
 	}
 	

@@ -1,7 +1,5 @@
 <div xmlns:th="http://www.thymeleaf.org"
-	th:replace="user\_layout :: base(content=~{::section},links=~{::link},scripts=~{::script})">
-	<link rel="stylesheet" th:href="@{/static/css/quill.snow.css}" />
-	<script th:src="@{/static/js/quill.min.js}" defer></script>
+	th:replace="user\_layout :: base(content=~{::section},scripts=~{::script})">
 	<script th:src="@{/static/js/user.editQuestion.js}" defer></script>
 	<section class="container">
 		<h1>Chỉnh sửa câu hỏi</h1>
