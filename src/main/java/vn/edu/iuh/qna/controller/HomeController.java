@@ -3,11 +3,11 @@ package vn.edu.iuh.qna.controller;
 import java.security.Principal;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import vn.edu.iuh.qna.dto.UserDetailRequestDto;
 import vn.edu.iuh.qna.utils.WebUtils;
 
 @Controller
@@ -16,11 +16,12 @@ public class HomeController {
 	public String login(Model model, Principal principal) {
 		return "login";
 	}
+
 	@GetMapping("/403")
 	public String accessDenied(Model model, Principal principal) {
 
 		if (principal != null) {
-			UserDetailRequestDto loginedUser = (UserDetailRequestDto) ((Authentication) principal).getPrincipal();
+			UserDetails loginedUser = (UserDetails) ((Authentication) principal).getPrincipal();
 
 			String userInfo = WebUtils.toString(loginedUser);
 
@@ -42,6 +43,5 @@ public class HomeController {
 //		return "logoutSuccessfulPage";
 //	}
 //
-
 
 }
