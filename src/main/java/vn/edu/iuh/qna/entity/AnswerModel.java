@@ -1,5 +1,5 @@
 package vn.edu.iuh.qna.entity;
-import java.time.LocalDateTime;
+import java.sql.Date;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -26,6 +26,6 @@ public class AnswerModel {
 	private UserModel author;
 	private boolean approval;
 	@Field("create_time")
-	private LocalDateTime createTime;
+	private Date createTime;
 	
 }
