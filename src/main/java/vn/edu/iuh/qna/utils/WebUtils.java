@@ -3,19 +3,19 @@ package vn.edu.iuh.qna.utils;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.experimental.UtilityClass;
-import vn.edu.iuh.qna.dto.UserDetailRequestDto;
 
 @UtilityClass
 public class WebUtils {
 
-	public String toString(UserDetailRequestDto user) {
+	public String toString(UserDetails user) {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("UserName:").append(user.getUsername());
 
-		Collection<GrantedAuthority> authorities = user.getAuthorities();
+		Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
 		if (authorities != null && !authorities.isEmpty()) {
 			sb.append(" (");
 			boolean first = true;

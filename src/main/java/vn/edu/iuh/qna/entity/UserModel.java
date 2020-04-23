@@ -1,6 +1,6 @@
 package vn.edu.iuh.qna.entity;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -26,7 +26,7 @@ public class UserModel {
 	@Id
 	private String id;
 	private String fullName;
-	private LocalDate birthday;
+	private Date birthday;
 	private String jobPosition;
 	@DBRef
 	private List<AnswerModel> followingQuestion;
@@ -35,6 +35,6 @@ public class UserModel {
 	private String encrytedPassword;
 	private String userName;
 	@Field("create_time")
-	private LocalDate createTime;
+	private Date createTime;
 
 }
