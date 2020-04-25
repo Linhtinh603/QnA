@@ -1,0 +1,102 @@
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="user\_layout :: base(content=~{::section})">
+	<section class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 col-sm-12 mt-3">
+				<nav class="nav nav-pills flex-column ">
+					<a class="nav-item nav-link" th:classappend="${categoryId == null} ? 'active'" th:href="@{/}">Tất cả</a> 
+					<a	th:each="category : ${categories}" class="nav-item nav-link"
+						th:text="${category.name}" th:classappend="${category.id == categoryId} ? 'active'"
+						th:href="@{/(category=${category.id})}"></a>
+				</nav>
+			</div>
+			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
+				<h1 class="mb-4">Kết quả tìm kiếm cho <span class="font-weight-bold" th:text="${key}"></span></h1>
+				<!-- 				<a -->
+				<!-- 				class="row mb-3 shadow rounded p-3 text-decoration-none text-dark border border-success" -->
+				<!-- 				href="/questions/abc"> -->
+				<!-- 				<div class="col-1 px-0 text-center text-success"> -->
+				<!-- 					1<br>CÃ¢u tráº£ lá»�i -->
+				<!-- 				</div> -->
+				<!-- 				<div class="col-1 px-0 text-center"> -->
+				<!-- 					10<br>quan tÃ¢m -->
+				<!-- 				</div> -->
+				<!-- 				<div class="col-1 px-0 text-center"> -->
+				<!-- 					120<br>lÆ°á»£t xem -->
+				<!-- 				</div> -->
+				<!-- 				<div class="col-9"> -->
+				<!-- 					<div class="row"> -->
+				<!-- 						<div class="col-12"> -->
+				<!-- 							<span class="font-weight-bold">LÃ m sao Ä‘á»ƒ cáº­p nháº­t pháº§n -->
+				<!-- 								má»�m diá»‡t vi rÃºt</span> -->
+				<!-- 						</div> -->
+				<!-- 					</div> -->
+				<!-- 					<div class="row justify-content-end"> -->
+				<!-- 						<span>24/02/2020, 12h30</span> -->
+				<!-- 					</div> -->
+				<!-- 				</div> -->
+				<!-- 			</a> -->
+				<p th:if="${questions.getTotalElements()==0}">Rất tiếc không có kết quả nào</p>
+				<a  th:each="question : ${questions}"
+					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.resolved} ? 'border border-success'"
+					th:href="@{'/questions/'+${question.id}}">
+					<div class="col-1 px-0 text-center" th:classappend="${question.resolved} ? 'text-success'">
+						<span
+							th:text="${#lists.isEmpty(question.answers)?'0':#lists.size(question.answers)}"></span><br>câu trả lời
+					</div>
+					<div class="col-1 px-0 text-center">
+						<span th:text="${question.follower}"></span><br>quan tâm
+					</div>
+					<div class="col-1 px-0 text-center">
+						<span th:text="${question.view}"></span><br>lượt xem
+					</div>
+					<div class="col-9">
+						<div class="row">
+							<div class="col-12">
+								<span th:text="${question.title}" class="font-weight-bold"></span>
+							</div>
+						</div>
+						<div class="row justify-content-end">
+							<span
+								th:text="${#dates.format(question.createTime, 'dd-MMM-yyyy HH:mm')}"></span>
+						</div>
+					</div>
+				</a>
+
+				<nav class="mt-5" aria-label="Pagination" th:if="${questions.totalPages gt 0}">
+					<ul class="pagination justify-content-center font-weight-medium">
+						<li class="page-item"
+							th:classappend="${questions.number eq 0} ? 'disabled'"><a
+							class="page-link svg-icon"
+							th:href="@{/search(page=${questions.number lt 2 ? 1 : questions.number},key=${key})}"
+							aria-label="Previous" title="Previous Page" rel="tooltip"> <span
+								aria-hidden="true" data-feather="chevrons-left" width="20"
+								height="20">Trang trước đó</span>
+						</a></li>
+						<li class="page-item"
+							th:classappend="${i eq questions.number + 1} ? 'active'"
+							th:each="i : ${#numbers.sequence( questions.number + 1, questions.totalPages > 10 + questions.number ? questions.number + 10 : questions.totalPages, 1)}">
+							<a class="page-link"
+							th:href="@{/search(page=${i},key=${key})}" th:text="${i}"
+							th:title="${'Page '+ i}" rel="tooltip"></a>
+						</li>
+						<li class="page-item disabled"
+							th:if="${questions.number + 10 < questions.totalPages}"><a
+							class="page-link svg-icon" href="#"> <span
+								data-feather="more-horizontal" width="20" height="20"></span>
+						</a></li>
+						<li class="page-item"
+							th:classappend="${questions.number + 1 eq questions.totalPages} ? 'disabled'">
+							<a class="page-link svg-icon"
+							th:href="@{/search(page=${questions.number + 2},key=${key})}"
+							aria-label="Next" title="Next Page" rel="tooltip"> <span
+								aria-hidden="true" data-feather="chevrons-right" width="20"
+								height="20">Trang tiếp theo</span>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</section>
+</div>

@@ -1,0 +1,18 @@
+#spring.profiles: integration
+spring:
+  mvc:
+    static-path-pattern: /static/**
+  thymeleaf:
+    cache: false
+  data:
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      database: QnA_DB
+      auto-index-creation: false
+logging:
+  level:
+    vn.edu.iuh.qna: debug
+#spring.data.mongodb.authentication-database=admin
+#spring.data.mongodb.username=<username specified on MONGO_INITDB_ROOT_USERNAME>
+#spring.data.mongodb.password=<password specified on MONGO_INITDB_ROOT_PASSWORD>

@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="_head(pageTitle='Đăng nhập')">
+</head>
+<body>
+
+	<div class="container mt-5">
+		<h1>Login</h1>
+
+		<!-- /login?error=true -->
+		<div th:if="${#request.getParameter('error') == 'true'}"
+			style="color: red; margin: 10px 0px;">
+			Login Failed!!!<br /> Reason : <span
+				th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
+				th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
+				Static summary </span>
+
+		</div>
+
+<!-- 		<h3>Nhập tên tài khoản và mật khẩu:</h3> -->
+		<form  name='f' th:action="@{/j_spring_security_check}" method='POST' class="mt-3">
+		  <div class="form-group row">
+		    <label for="staticEmail" class="col-sm-2 col-form-label">Tên tài khoản:</label>
+		    <div class="col-sm-6">
+		      <input type="text" class="form-control" id="staticEmail" placeholder="nhập tên tài khoản ở đây (vd: PhuongHTM)" name='username' value="LinhHCH">
+		    </div>
+		  </div>
+		  <div class="form-group row">
+		    <label for="inputPassword" class="col-sm-2 col-form-label">Mật khẩu:</label>
+		    <div class="col-sm-6">
+		      <input type="password" class="form-control" id="inputPassword" placeholder="nhập mật khẩu ở đây..." name='password' value="123">
+		    </div>
+		  </div>
+		  <div class="form-group row">
+		    <div class="col-sm-2">Nhớ đăng nhập?</div>
+		    <div class="col-sm-8">
+		      <div class="form-check">
+		        <input class="form-check-input" type="checkbox" id="gridCheck1" name="remember-me">
+		        <label class="form-check-label" for="gridCheck1">
+		          tích vào để nhớ mật khẩu
+		        </label>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="form-group row">
+		    <div class="col-sm-2 offset-sm-2">
+		      <button type="submit" class="btn btn-primary">Đăng nhập</button>
+		    </div>
+		  </div>
+		</form>
+	</div>
+
+	<footer th:replace="_footer"></footer>
+</body>
+</html>
