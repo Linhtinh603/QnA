@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import vn.edu.iuh.qna.dto.UserDetailRequestDto;
+import vn.edu.iuh.qna.dto.UserDetailReqDto;
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.service.CategoryService;
@@ -84,10 +84,10 @@ public class UserController {
 	@PostMapping("/questions/new")
 	public ResponseEntity<String> doCreateQuestion(@RequestBody QuestionModel question, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailRequestDto)) {
+		if (!(principal instanceof UserDetailReqDto)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		UserDetailRequestDto userDetail = (UserDetailRequestDto) principal;
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		question.setAuthor(userDetail.getUser());
 		question.setCreateTime(new Date());
 		question.setStatus(true);
@@ -101,10 +101,10 @@ public class UserController {
 	@GetMapping("/questions/{id}")
 	public String viewQuestion(Model model, @PathVariable String id, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailRequestDto)) {
+		if (!(principal instanceof UserDetailReqDto)) {
 			return "404Page";
 		}
-		UserDetailRequestDto userDetail = (UserDetailRequestDto) principal;
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		model.addAttribute("userId", userDetail.getUser().getId());
 		
 		List<CategoryModel> listCategory = categoryService.findAll();
@@ -146,10 +146,10 @@ public class UserController {
 	public ResponseEntity<String> doEditQuestion(@RequestBody QuestionModel question, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
 		if (question == null || question.getId() == null || question.getAuthor() == null
-				|| question.getAuthor().getId() == null || !(principal instanceof UserDetailRequestDto)) {
+				|| question.getAuthor().getId() == null || !(principal instanceof UserDetailReqDto)) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		UserDetailRequestDto userDetail = (UserDetailRequestDto) principal;
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		if (!question.getAuthor().getId().equals(userDetail.getUser().getId())) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}

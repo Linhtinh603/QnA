@@ -17,7 +17,7 @@ import vn.edu.iuh.qna.entity.UserModel;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDetailRequestDto implements UserDetails {
+public class UserDetailReqDto implements UserDetails {
 	/**
 	 * 
 	 */

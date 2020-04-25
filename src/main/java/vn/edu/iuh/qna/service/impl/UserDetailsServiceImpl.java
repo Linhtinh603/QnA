@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import vn.edu.iuh.qna.dto.UserDetailRequestDto;
+import vn.edu.iuh.qna.dto.UserDetailReqDto;
 import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.service.UserService;
 
@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		Optional<UserModel> userOptional = userService.findByUserName(userName);
-		return userOptional.map(user->new UserDetailRequestDto(user))
+		return userOptional.map(user->new UserDetailReqDto(user))
 				.orElseThrow(() -> new UsernameNotFoundException("User " + userName + " was not found in the database"));
 	}
 }
