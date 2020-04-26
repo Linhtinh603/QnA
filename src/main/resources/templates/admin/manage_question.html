@@ -1,7 +1,6 @@
 <div xmlns:th="http://www.thymeleaf.org"
 	th:replace="admin\_layout :: base(content=~{::section},links=~{::link},scripts=~{::script})">
-	<link rel="stylesheet" th:href="@{/static/css/admin.manageAccount.css}" />
-	<script th:src="@{/static/js/admin.manageAccount.js}" defer></script>
+	<script th:src="@{/static/js/admin.manageQuestion.js}" defer></script>
 	<section class="container-fluid">
 		<div class="row">
 			<div class="col-md-2 col-sm-12 mt-3">
@@ -17,32 +16,26 @@
 						<table id="tableAdmin" class="table table-bordered table-striped">
 							<thead>
 								<tr>
-									<th scope="col">Người dùng</th>
-									<th scope="col">Họ và tên</th>
-									<th scope="col">Vị trí công việc</th>
-									<th scope="col">Đang hoạt động</th>
+									<th scope="col">STT</th>
+									<th scope="col">Tiêu đề</th>
+									<th scope="col">Số câu trả lời</th>
+									<th scope="col">Lượt xem</th>
+									<th scope="col">Danh mục</th>
+									<th scope="col">Người đăng</th>
+									<th scope="col">Ngày đăng</th>
+									<th scope="col">Chức năng</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<th scope="row">huuvv</th>
-									<td>Võ Văn Hữu</td>
-									<td>Intern</td>
-									<td>
-										<input type="checkbox" />
-									</td>
-								</tr>
-								<tr>
-									<th scope="row">hunglv</th>
-									<td>Lê Vũ Hùng</td>
-									<td>Intern</td>
-									<td><input type="checkbox" /></td>
-								</tr>
-								<tr>
-									<th scope="row">lualt</th>
-									<td>Lê Thị Lụa</td>
-									<td>Hr</td>
-									<td><input type="checkbox" /></td>
+								<tr th:each="question,iter : ${questions}">
+									<th th:text="${iter.index+1}"></th>
+									<td th:text="${question.title}"></td>
+									<td th:text="${question.answers==null ? 0 : #lists.size(question.answers)}"></td>
+									<td th:text="${question.view}"></td>
+									<td th:text="${question.category.name}"></td>
+									<td th:text="${question.author.userName}"></td>
+									<td th:text="${#dates.format(question.createTime, 'dd-MMM-yyyy HH:mm')}"></td>
+									<td><a href="" th:id="${question.id}" th:data-title="${question.title}" onclick="deleteQuestion.call(this)">Xóa</a></td>
 								</tr>
 							</tbody>
 						</table>

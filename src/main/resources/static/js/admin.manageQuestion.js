@@ -1,22 +1,21 @@
-function changeUserStatus() {
-	var userName = this.getAttribute("data-user-name")
-	var userId = this.id;
-	var status = this.checked;
-	if (confirm('Bạn có muốn thay đổi trạng thái của tài khoản ' + userName)) {
-		$.post('/admin/change_account_status', // url
+function deleteQuestion(){
+	var questionId = this.id;
+	var title = this.getAttribute("data-title");
+	if (confirm('Bạn có muốn xóa câu hỏi \"' + title + '\" không?')) {
+		$.post('/admin/delete_question', // url
 		{
-			userId : userId,
-			status : status
+			questionId : questionId
 		}, // data to be submit
 		function(data, status, jqXHR) {// success callback
 			if(status=='success'){
-				toastr.success('Thay đổi trạng thái thành công');
+				toastr.success('Xóa câu hỏi thành công');
+				setTimeout(() => {
+					location.reload();
+				}, 500);
 			} else {
 				toastr.error('Có lỗi xảy ra')
 			}
 		})
-	} else {
-		this.checked = !status;
 	}
 }
 

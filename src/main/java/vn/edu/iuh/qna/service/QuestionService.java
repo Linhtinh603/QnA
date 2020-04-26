@@ -1,5 +1,6 @@
 package vn.edu.iuh.qna.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -14,6 +15,8 @@ public interface QuestionService {
 	void save(QuestionModel question);
 	Optional<QuestionModel> finById(String id);
 	Page<QuestionModel> findAll(Pageable pageable);
+	List<QuestionModel> findAll();
 	Page<QuestionModel> findByCategory(CategoryModel category,Pageable pageable);
 	Page<QuestionModel> findByTitleNormalizedContaining(String titleNormalized,Pageable pageable);
+	void delete(String id);
 }
