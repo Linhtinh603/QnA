@@ -34,7 +34,7 @@ public class QuestionModel {
 	private UserModel author;
 	private int view;
 	private boolean status;
-	private boolean resolved;
+	private AnswerModel rightAnswer;
 	private long follower;
 	private Date createTime;
 	private Date updateTime;

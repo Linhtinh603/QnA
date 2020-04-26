@@ -1,5 +1,6 @@
 package vn.edu.iuh.qna.entity;
-import java.sql.Date;
+
+import java.util.Date;
 
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -24,7 +25,6 @@ public class AnswerModel {
 	@Indexed
 	@DBRef
 	private UserModel author;
-	private boolean approval;
 	@Field("create_time")
 	private Date createTime;
 	

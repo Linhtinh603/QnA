@@ -1,8 +1,10 @@
 package vn.edu.iuh.qna.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import vn.edu.iuh.qna.dto.UserDetailReqDto;
+import vn.edu.iuh.qna.entity.AnswerModel;
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.service.CategoryService;
@@ -92,6 +95,8 @@ public class UserController {
 		question.setCreateTime(new Date());
 		question.setStatus(true);
 		question.setTitleNormalized(StringUtils.normalize(question.getTitle()));
+		question.setFollower(0);
+		question.setAnswers(new ArrayList<>());
 		question.setUpdateTime(new Date());
 		question.setView(0);
 		questionService.save(question);
@@ -114,14 +119,29 @@ public class UserController {
 			return "404Page";
 		}
 		model.addAttribute("question",question.get());
+		if(question.get().getAuthor().getUserName().equals(userDetail.getUsername())) {
+			model.addAttribute("answer", new AnswerModel());
+			return "user/view_question";
+		}
+		model.addAttribute("answer", new AnswerModel());
 		return "user/view_question";
 	}
 	
-	@GetMapping("/questions/reply")
-	public String replyQuestion(Model model) {
-		List<CategoryModel> listCategory = categoryService.findAll();
-		model.addAttribute("categories", listCategory);
-		return "user/reply_question";
+	@PostMapping("/questions/{id}")
+	public ResponseEntity<String> replyQuestion(@RequestBody AnswerModel answer, @PathVariable String id, Authentication authentication) {
+		Object principal = authentication.getPrincipal();
+		if (answer == null || answer.getContent().length() < 10 || !(principal instanceof UserDetailReqDto)) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		UUID uuid = UUID.randomUUID();
+		answer.setId(uuid.toString());
+		answer.setAuthor(userDetail.getUser());
+		answer.setCreateTime(new Date());
+		Optional<QuestionModel> question = questionService.finById(id);
+		question.get().getAnswers().add(answer);
+		questionService.save(question.get());
+		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 
 	@GetMapping("/questions/edit/{id}")
