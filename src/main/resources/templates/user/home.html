@@ -36,9 +36,9 @@
 				<!-- 				</div> -->
 				<!-- 			</a> -->
 				<a th:each="question : ${questions}"
-					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.resolved} ? 'border border-success'"
+					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.rightAnswer != null} ? 'border border-success'"
 					th:href="@{'/questions/'+${question.id}}">
-					<div class="col-1 px-0 text-center" th:classappend="${question.resolved} ? 'text-success'">
+					<div class="col-1 px-0 text-center" th:classappend="${question.rightAnswer != null} ? 'text-success'">
 						<span
 							th:text="${#lists.isEmpty(question.answers)?'0':#lists.size(question.answers)}"></span><br>Câu
 						trả lời
