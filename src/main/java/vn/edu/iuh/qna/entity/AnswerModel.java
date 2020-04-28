@@ -25,7 +25,6 @@ public class AnswerModel {
 	@Indexed
 	@DBRef
 	private UserModel author;
-	@Field("create_time")
 	private Date createTime;
 	
 }

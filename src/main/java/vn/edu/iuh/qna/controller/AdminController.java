@@ -2,19 +2,28 @@ package vn.edu.iuh.qna.controller;
 
 import static vn.edu.iuh.qna.config.WebSecurityConfig.ROLE_ADMIN;
 import static vn.edu.iuh.qna.config.WebSecurityConfig.ROLE_USER;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionFailedException;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,11 +31,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import vn.edu.iuh.qna.dto.UserInfoReqDto;
 import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.service.QuestionService;
+import vn.edu.iuh.qna.service.ReportService;
+import vn.edu.iuh.qna.service.ReportService.CountReportDto;
 import vn.edu.iuh.qna.service.UserService;
 import vn.edu.iuh.qna.utils.EncrytedPasswordUtils;
 
@@ -39,8 +51,32 @@ public class AdminController {
 	@Autowired
 	private QuestionService questionService;
 
+	@Autowired
+	private ReportService reportService;
+
 	@GetMapping
-	public String home() {
+	public String home(@RequestParam(required = false) String from, @RequestParam(required = false) String to,
+			Model model) {
+		SimpleDateFormat SDFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date fromDate = null;
+		Date toDate = null;
+		try {
+			fromDate = SDFormat.parse(from);
+			toDate = SDFormat.parse(to);
+			if (fromDate.getTime() > toDate.getTime()) {
+				throw new Exception();
+			}
+		} catch (Exception ex) {
+			Calendar cal = Calendar.getInstance();
+			toDate = cal.getTime();
+			cal.add(Calendar.MONTH, -1);
+			fromDate = cal.getTime();
+		}
+
+		Map<String, List<CountReportDto>> report = reportService.queryAdminReport(fromDate, toDate);
+		model.addAttribute("report", report);
+		model.addAttribute("from", fromDate);
+		model.addAttribute("to", toDate);
 		return "admin/report";
 	}
 
@@ -153,4 +189,5 @@ public class AdminController {
 		questionService.delete(questionOp.get().getId());
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
+
 }
