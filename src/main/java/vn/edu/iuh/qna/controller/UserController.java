@@ -98,6 +98,7 @@ public class UserController {
 		question.setFollower(0);
 		question.setAnswers(new ArrayList<>());
 		question.setView(0);
+		question.setRightAnswerId("");
 		questionService.save(question);
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
