@@ -97,7 +97,6 @@ public class UserController {
 		question.setTitleNormalized(StringUtils.normalize(question.getTitle()));
 		question.setFollower(0);
 		question.setAnswers(new ArrayList<>());
-		question.setUpdateTime(new Date());
 		question.setView(0);
 		questionService.save(question);
 		return new ResponseEntity<String>(HttpStatus.CREATED);
@@ -123,25 +122,10 @@ public class UserController {
 			model.addAttribute("answer", new AnswerModel());
 			return "user/view_question";
 		}
-		model.addAttribute("answer", new AnswerModel());
-		return "user/view_question";
-	}
-	
-	@PostMapping("/questions/{id}")
-	public ResponseEntity<String> replyQuestion(@RequestBody AnswerModel answer, @PathVariable String id, Authentication authentication) {
-		Object principal = authentication.getPrincipal();
-		if (answer == null || answer.getContent().length() < 10 || !(principal instanceof UserDetailReqDto)) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
-		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
-		UUID uuid = UUID.randomUUID();
-		answer.setId(uuid.toString());
-		answer.setAuthor(userDetail.getUser());
-		answer.setCreateTime(new Date());
-		Optional<QuestionModel> question = questionService.finById(id);
-		question.get().getAnswers().add(answer);
+		question.get().setView(question.get().getView() + 1);
 		questionService.save(question.get());
-		return new ResponseEntity<String>(HttpStatus.CREATED);
+		model.addAttribute("answer", new AnswerModel());
+		return "user/reply_question";
 	}
 
 	@GetMapping("/questions/edit/{id}")
