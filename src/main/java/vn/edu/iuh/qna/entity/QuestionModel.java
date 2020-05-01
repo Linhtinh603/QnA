@@ -33,7 +33,7 @@ public class QuestionModel {
 	@DBRef
 	private UserModel author;
 	private int view;
-	private boolean status;
+	private boolean isDeleted;
 	private String rightAnswerId;
 	private long follower;
 	private Date createTime;

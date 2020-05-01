@@ -5,9 +5,11 @@
 			var originContent = JSON.parse(originContentString);
 			var questionId =  [[${question.id}]]
 			var userId = [[${userId}]]
+			var owner = [[${owner}]]
 	</script>
 	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
+	<script th:src="@{/static/js/bootstrap.bundle.min.js}" defer></script>
 	<!-- https://cdnjs.com/libraries/sockjs-client -->
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
@@ -47,9 +49,9 @@
 								aria-haspopup="true" aria-expanded="false"> Tùy chọn </span>
 							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 								<a class="dropdown-item text-warning"
-									th:href="@{edit/{id}(id=${question.id})}">Chỉnh sửa</a> <a
-									class="dropdown-item text-danger"
-									th:href="@{delete/{id}(id=${question.id})}">Xóa</a>
+									th:href="@{edit/{id}(id=${question.id})}">Chỉnh sửa</a> 
+									<a id="btnDelete" class="dropdown-item text-danger"
+									href="#">Xóa</a>
 							</div>
 						</div>
 					</div>
@@ -83,6 +85,21 @@
 					th:text="'Có ' + ${#lists.size(question.answers)} + ' câu trả lời'"
 					class="mt-3 text-monospace text-success font-weight-bold">Có
 					4 câu trả lời</div>
+				<table class="mt-3 border-bottom border-secondary" th:if="${question.rightAnswerId != ''}">
+					<tbody th:each = "answer : ${question.answers}" th:if="${answer.id == question.rightAnswerId}">
+						<tr>
+							<td class="align-middle" data-toggle="tooltip" data-placement="top" title="Câu trả lời này đã giải quyết được vấn đề của người hỏi">
+								<i id="btnCancleRightAnswer" class="fas fa-check fa-3x text-success"></i>
+							</td>
+							<td class=".text-info p-2" style="background-color: #e6e6ff;"> Nội dung.
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+						</tr>
+					</tbody>
+				</table>				
 				<div id="answer-list">
 					<th:block th:each="answer : ${question.answers}">
 						<table class="mt-3 border-bottom border-secondary">
@@ -91,7 +108,7 @@
 									<td class="align-middle text-secondary" data-toggle="tooltip"
 										data-placement="top"
 										title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
-										<i class="fas fa-check fa-3x"></i>
+										<i id="btnRightAnswer" class="fas fa-check fa-3x"></i>
 									</td>
 									<td th:text="${answer.content}">Nội dung câu trả lời.</td>
 								</tr>

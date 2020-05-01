@@ -29,7 +29,7 @@ public class UserModel {
 	private Date birthday;
 	private String jobPosition;
 	@DBRef
-	private List<AnswerModel> followingQuestion;
+	private List<QuestionModel> followingQuestion;
 	private boolean status;
 	private String role;
 	private String encrytedPassword;

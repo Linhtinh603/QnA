@@ -11,43 +11,19 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
-				<!-- 				<a -->
-				<!-- 				class="row mb-3 shadow rounded p-3 text-decoration-none text-dark border border-success" -->
-				<!-- 				href="/questions/abc"> -->
-				<!-- 				<div class="col-1 px-0 text-center text-success"> -->
-				<!-- 					1<br>Câu trả lời -->
-				<!-- 				</div> -->
-				<!-- 				<div class="col-1 px-0 text-center"> -->
-				<!-- 					10<br>quan tâm -->
-				<!-- 				</div> -->
-				<!-- 				<div class="col-1 px-0 text-center"> -->
-				<!-- 					120<br>lượt xem -->
-				<!-- 				</div> -->
-				<!-- 				<div class="col-9"> -->
-				<!-- 					<div class="row"> -->
-				<!-- 						<div class="col-12"> -->
-				<!-- 							<span class="font-weight-bold">Làm sao để cập nhật phần -->
-				<!-- 								mềm diệt vi rút</span> -->
-				<!-- 						</div> -->
-				<!-- 					</div> -->
-				<!-- 					<div class="row justify-content-end"> -->
-				<!-- 						<span>24/02/2020, 12h30</span> -->
-				<!-- 					</div> -->
-				<!-- 				</div> -->
-				<!-- 			</a> -->
-				<a th:each="question : ${questions}"
-					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.rightAnswer != null} ? 'border border-success'"
+				<a th:each="question : ${questions}" th:if="${!question.deleted}"
+					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.rightAnswerId != ''} ? 'border border-success'"
 					th:href="@{'/questions/'+${question.id}}">
-					<div class="col-1 px-0 text-center" th:classappend="${question.rightAnswer != null} ? 'text-success'">
+					<div class="col-1 px-0 text-center" th:classappend="${question.rightAnswerId != ''} ? 'text-success'">
 						<span
 							th:text="${#lists.isEmpty(question.answers)?'0':#lists.size(question.answers)}"></span><br>Câu
 						trả lời
 					</div>
 					<div class="col-1 px-0 text-center">
-						<span th:text="${question.follower}"></span><br>quan tâm
+						<span th:text="${question.follower}"></span><br><span>Quan tâm</span>
 					</div>
 					<div class="col-1 px-0 text-center">
-						<span th:text="${question.view}"></span><br>lượt xem
+						<span th:text="${question.view} "></span><br><span>Lượt xem</span>
 					</div>
 					<div class="col-9">
 						<div class="row">
