@@ -1,6 +1,5 @@
 package vn.edu.iuh.qna.controller;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,13 +29,16 @@ import vn.edu.iuh.qna.dto.UserDetailReqDto;
 import vn.edu.iuh.qna.entity.AnswerModel;
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
+import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.service.CategoryService;
 import vn.edu.iuh.qna.service.QuestionService;
 import vn.edu.iuh.qna.service.ReportService;
 import vn.edu.iuh.qna.service.ReportService.CountReportDto;
+import vn.edu.iuh.qna.service.UserService;
 import vn.edu.iuh.qna.utils.StringUtils;
+import static vn.edu.iuh.qna.config.WebSecurityConfig.ROLE_USER;
 
-@Secured("ROLE_USER")
+@Secured(ROLE_USER)
 @Controller
 public class UserController {
 	@Autowired
@@ -44,6 +47,8 @@ public class UserController {
 	private QuestionService questionService;
 	@Autowired
 	private ReportService reportService;
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/")
 	public String home(Model model, @RequestParam(required = false, name = "category") String categoryId,
@@ -100,7 +105,7 @@ public class UserController {
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		question.setAuthor(userDetail.getUser());
 		question.setCreateTime(new Date());
-		question.setStatus(true);
+		question.setDeleted(false);
 		question.setTitleNormalized(StringUtils.normalize(question.getTitle()));
 		question.setFollower(0);
 		question.setAnswers(new ArrayList<>());
@@ -114,37 +119,48 @@ public class UserController {
 	public String viewQuestion(Model model, @PathVariable String id, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
 		if (!(principal instanceof UserDetailReqDto)) {
-			return "404Page";
+			return "403Page";
 		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		model.addAttribute("userId", userDetail.getUser().getId());
-
 		List<CategoryModel> listCategory = categoryService.findAll();
 		model.addAttribute("categories", listCategory);
 		Optional<QuestionModel> question = questionService.finById(id);
-		if (question.get().isStatus() == false) {
+		if(question.get().isDeleted()) {
 			return "404Page";
 		}
-		model.addAttribute("question", question.get());
-		if (question.get().getAuthor().getUserName().equals(userDetail.getUsername())) {
+		if(userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+			model.addAttribute("owner", true);
+		}else {
+			model.addAttribute("owner", false);
+		}
+		model.addAttribute("question",question.get());
+		if(question.get().getAuthor().getUserName().equals(userDetail.getUsername())) {
 			model.addAttribute("answer", new AnswerModel());
 			return "user/view_question";
 		}
 		question.get().setView(question.get().getView() + 1);
 		questionService.save(question.get());
-		model.addAttribute("answer", new AnswerModel());
 		return "user/reply_question";
 	}
 
 	@GetMapping("/questions/edit/{id}")
-	public String editQuestion(Model model, @PathVariable String id) {
+	public String editQuestion(Model model, @PathVariable String id, Authentication authentication) {
 		if ("".equals(id)) {
 			return "redirect:/";
 		}
 		Optional<QuestionModel> question = questionService.finById(id);
 
-		if (!question.isPresent() || question.get().isStatus() == false) {
-			return "redirect:/";
+		if (!question.isPresent() || question.get().isDeleted()) {
+			return "404Page";
+		}
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return "403Page";
+		}
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+			return "403Page";
 		}
 		List<CategoryModel> listCategory = categoryService.findAll();
 		model.addAttribute("categories", listCategory);
@@ -175,6 +191,72 @@ public class UserController {
 		originQuestion.get().setContent(question.getContent());
 		questionService.save(originQuestion.get());
 		return new ResponseEntity<String>(HttpStatus.CREATED);
+	}
+	
+	@DeleteMapping("/questions/delete")
+	public ResponseEntity<String> deleteQuestion(@RequestParam String id ,Authentication authentication){
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		Optional<QuestionModel> question = questionService.finById(id);
+		
+		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+		}
+		
+		question.get().setDeleted(true);
+		questionService.save(question.get());
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/questions/follow")
+	public ResponseEntity<String> followQuestion(@RequestParam String id ,Authentication authentication){
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		UserModel user = userDetail.getUser();
+		Optional<QuestionModel> question = questionService.finById(id);		
+		user.getFollowingQuestion().add(question.get());
+		userService.save(user);
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/questions/{id}/right-answer")
+	public ResponseEntity<String> chooseRightAnswer(@PathVariable String id, @RequestParam String rightAnswerId ,Authentication authentication){
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		Optional<QuestionModel> question = questionService.finById(id);		
+		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+		}
+		question.get().setRightAnswerId(rightAnswerId);
+		questionService.save(question.get());
+		
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/questions/{id}/cancle-right-answer")
+	public ResponseEntity<String> cancleRightAnswer(@PathVariable String id, @RequestParam String rightAnswerId ,Authentication authentication){
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		Optional<QuestionModel> question = questionService.finById(id);		
+		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+		}
+		question.get().setRightAnswerId("");
+		questionService.save(question.get());
+		
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
 	@GetMapping({ "/my_profile", "/my_profile/posted_questions" })

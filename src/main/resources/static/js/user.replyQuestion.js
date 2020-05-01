@@ -26,24 +26,49 @@ function onMessageReceived(payload){
 	 var answer = JSON.parse(payload.body);
 	 console.log("on message receive:  ",answer);
 	 var answer_list = document.getElementById('answer-list');
-	 var element = `<table class="mt-3 border-bottom border-secondary">
-						<tbody>	
-							<tr>
-								<td class="align-middle text-secondary" data-toggle="tooltip"
-									data-placement="top"
-									title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
-									<i class="fas fa-check fa-3x"></i>
-								</td>
-								<td>${answer.content}.</td>
-							</tr>
-							<tr>
-								<td></td>
-								<td><div class="font-italic m-2 text-info">
-									${answer.author.fullName} đã trả lời vào lúc ${answer.createTime}
-									</div></td>
-							</tr>
-						</tbody>
-					</table>`
+	 
+	 if(owner){
+		 var element = `<table class="mt-3 border-bottom border-secondary">
+				<tbody>	
+					<tr>
+						<td class="align-middle text-secondary" data-toggle="tooltip"
+							data-placement="top"
+							title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
+							<i class="fas fa-check fa-3x"></i>
+						</td>
+						<td>${answer.content}.</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<div>
+								<a th:href="@{/profile/{id}(id=${answer.author.userName})}"
+									class="font-italic m-1 text-info"> ${answer.author.fullName} </a> 
+								<span class="font-italic text-info"> đã hỏi lúc ${answer.createTime}</span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>`
+	 }else{
+		 var element = `<table class="mt-3 border-bottom border-secondary">
+				<tbody>	
+					<tr>
+						<td>${answer.content}.</td>
+					</tr>
+					<tr>
+						<td>
+							<div>
+								<a th:href="@{/profile/{id}(id=${answer.author.userName})}"
+									class="font-italic m-1 text-info"> ${answer.author.fullName} </a> 
+								<span class="font-italic text-info"> đã hỏi lúc ${answer.createTime}</span>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>`
+	 }
+	
 	answer_list.insertAdjacentHTML("beforeend",element)
 	$("#content").val("")
 }
