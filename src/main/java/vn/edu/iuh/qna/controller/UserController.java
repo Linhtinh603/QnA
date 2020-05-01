@@ -133,8 +133,18 @@ public class UserController {
 			model.addAttribute("answer", new AnswerModel());
 			return "user/view_question";
 		}
+		
 		question.get().setView(question.get().getView() + 1);
 		questionService.save(question.get());
+		
+		boolean following = false;	
+		for(QuestionModel followingQuestion : userDetail.getUser().getFollowingQuestion()) {
+			if(followingQuestion.getId().equals(id)) {
+				following = true;
+				break;
+			}
+		}
+		model.addAttribute("following", following);
 		return "user/reply_question";
 	}
 

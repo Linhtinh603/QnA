@@ -7,6 +7,7 @@
 			var questionId =  [[${question.id}]]
 			var userId = [[${userId}]]
 			var owner = [[${owner}]]
+			var owner = [[${following}]]
 	</script>
 	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
@@ -26,7 +27,10 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
-				<h4 th:text="${question.title}"> Question Title <i id="btnFollow" class="fas fa-star">Theo dõi</i> </h4>
+				<h4 th:text="${question.title}"> Question Title </h4> 
+				<span class="align-middle" data-toggle="tooltip" data-placement="top" title="Quan tâm theo dõi câu hỏi này">
+								<i class="" th:classappend="${following} ? 'fas-star text-warning' : 'far-star text-danger'"></i>
+							</span>
 				<div class="row border-bottom border-dark">
 					<a th:text="${question.category.name}" th:href="@{search(category=${question.category.id})}" class="col-auto">Category</a>
 					<div th:text="${question.view} + ' lượt xem'" class="col-auto font-italic text-warning">124 Lượt xem xem</div>
