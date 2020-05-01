@@ -2,6 +2,8 @@
 spring:
   mvc:
     static-path-pattern: /static/**
+    locale: vi_VN
+    locale-resolver: fixed
   thymeleaf:
     cache: false
   data:

@@ -36,7 +36,7 @@
 					<div th:text="'Tạo bởi ' + ${question.author.fullName} + ' ('+${question.author.userName}+') '" 
 						class="col-auto font-italic text-warning">Tạo bởi HuuVV</div>
 					<div class="col-auto font-italic text-secondary" th:if="${question.updateTime != null}" 
-					th:text="'Chỉnh sửa lần cuối vào '+${question.updateTime}">Chỉnh sửa lần cuối vào 26-4-2020 12h54</div>
+					th:text="'Chỉnh sửa lần cuối vào '+ ${#dates.format(question.updateTime, 'dd-MMM-yyyy HH:mm')}">Chỉnh sửa lần cuối vào 26-4-2020 12h54</div>
 				</div>
 
 				<table class="mt-4 shadow-sm rounded .bg-secondary">
@@ -47,7 +47,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><div th:text="${question.author.fullName} + ' đã hỏi lúc ' + ${question.createTime}" 
+							<td><div th:text="${question.author.fullName} + ' đã hỏi lúc ' + ${#dates.format(question.createTime, 'dd-MMM-yyyy HH:mm')}" 
 								class="font-italic m-2 text-info">HuuVV đã
 									hỏi lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
@@ -74,7 +74,7 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div th:text="${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}" class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>
@@ -86,7 +86,7 @@
 									<td th:text="${answer.content}">Nội dung câu trả lời.</td>
 								</tr>
 								<tr>									
-									<td><div th:text="${answer.author.fullName} + ' đã trả lời vào lúc ' + ${answer.createTime}" 
+									<td><div th:text="${answer.author.fullName} + ' đã trả lời vào lúc ' + ${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}" 
 									class="font-italic m-2 text-info">HuuVV đã
 										trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 								</tr>

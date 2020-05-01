@@ -117,7 +117,7 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div th:text="${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}" class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>				
