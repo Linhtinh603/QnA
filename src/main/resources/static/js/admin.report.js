@@ -79,3 +79,25 @@ new Chart(canvas, {
 		}
 	}
 });
+
+
+$(function(){
+	$("#form").submit(function(event){
+		var fromStr = $('input[name="from"]').val()
+		var toStr = $('input[name="to"]').val()
+		var from = new Date(fromStr)
+		var to = new Date(toStr)
+		var delta = to.getTime() -  from.getTime();
+		if(delta<=0){
+			toastr.error('Dữ liệu ngày không hợp lệ', 'Có lỗi xảy ra!');
+			return false;
+		} else {
+			var date=delta/1000/60/60/24;
+			if(date>30){
+				toastr.error('Khoảnh cách thời gian tối đa 1 tháng(31 ngày)', 'Có lỗi xảy ra!');
+				return false;
+			}
+		}
+		return true;
+	})
+})
