@@ -1,4 +1,19 @@
-<div xmlns:th="http://www.thymeleaf.org" th:replace="user\_layout :: base(content=~{::section})">
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="user\_layout :: base(content=~{::section},scripts=~{::script})">
+
+	<script th:inline="javascript">
+			var originContentString = [[${question.content}]]
+			var originContent = JSON.parse(originContentString);
+			var questionId =  [[${question.id}]]
+			var userId = [[${userId}]]
+	</script>
+	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
+	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
+	 <!-- https://cdnjs.com/libraries/sockjs-client -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+      <!-- https://cdnjs.com/libraries/stomp.js/ -->
+      <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+      
 	<section class="container-fluid">
 		<div class="row">
 			<div class="col-md-2 col-sm-12 mt-3">
@@ -10,27 +25,41 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
-				<h4>Làm sao để cập nhật phần mềm vi rút? <i class="fas fa-star"></i></h4>
+				<h4 th:text="${question.title}"> Question Title <i class="fas fa-star"></i></h4>
 				<div class="row border-bottom border-dark">
-					<a href="category" class="col-auto">Category</a>
-					<div class="col-auto font-italic text-warning">124 Lượt xem xem</div>
-					<div class="col-auto font-italic text-warning">Tạo bởi HuuVV</div>
-					<div class="col-auto font-italic text-secondary">Chỉnh sửa lần cuối vào 26-4-2020 12h54</div>
+					<a th:text="${question.category.name}" th:href="@{search(category=${question.category.id})}" class="col-auto">Category</a>
+					<div th:text="${question.view} + ' lượt xem'" class="col-auto font-italic text-warning">124 Lượt xem xem</div>
+					<div th:text="'Tạo bởi ' + ${question.author.fullName} + ' ('+${question.author.userName}+') '" 
+						class="col-auto font-italic text-warning">Tạo bởi HuuVV</div>
+					<div class="col-auto font-italic text-secondary" th:if="${question.updateTime != null || question.updateTime != ''}" 
+					th:text="'Chỉnh sửa lần cuối vào '+${question.updateTime}">Chỉnh sửa lần cuối vào 26-4-2020 12h54</div>
 				</div>
 
 				<table class="mt-4 shadow-sm rounded .bg-secondary">
 					<tbody>
 						<tr>
-							<td class="p-2">Tight pants next level keffiyeh you probably haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel have a terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan whatever keytar, scenester farm-to-table banksy Austin twitter handle freegan cred raw denim single-origin coffee viral.
+							<td class="p-2">
+								<div id="editor"></div>
 							</td>
 						</tr>
 						<tr>
-							<td><div class="font-italic m-2 text-info">HuuVV đã hỏi lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div th:text="${question.author.fullName} + ' đã hỏi lúc ' + ${question.createTime}" 
+								class="font-italic m-2 text-info">HuuVV đã
+									hỏi lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>
-				<div class="mt-3 text-monospace text-success font-weight-bold">Có 4 câu trả lời</div>
-				<table class="mt-3 border-bottom border-secondary">
+				<div th:if = "${#lists.isEmpty(question.answers)}"
+						th:text="'Chưa có câu trả lời cho câu hỏi này, hãy là người đầu tiên trả lời câu hỏi.'"
+						class="mt-3 text-monospace text-danger ">
+						Chưa có câu trả lời
+				</div>
+				<div th:if = "${not #lists.isEmpty(question.answers)}" 
+					th:text="'Có ' + ${#lists.size(question.answers)} + ' câu trả lời'" 
+					class="mt-3 text-monospace text-success font-weight-bold">
+					Có 4 câu trả lời
+				</div>
+				<table class="mt-3 border-bottom border-secondary" th:if="${question != null || question != ''}">
 					<tbody>
 						<tr>
 							<td class="align-middle" data-toggle="tooltip" data-placement="top" title="Câu trả lời này đã giải quyết được vấn đề của người hỏi">
@@ -45,23 +74,26 @@
 						</tr>
 					</tbody>
 				</table>
-				<table class="mt-3 border-bottom border-secondary">
-					<tbody>
-						<tr>
-							<td class="align-middle"><i class="d-none fas fa-check fa-3x text-success"></i></td>
-							<td>Tight pants next level keffiyeh you probably haven't heard of them. Photo booth beard raw denim letterpress vegan messenger bag stumptown. Farm-to-table seitan, mcsweeney's fixie sustainable quinoa 8-bit american apparel have a terry richardson vinyl chambray. Beard stumptown, cardigans banh mi lomo thundercats. Tofu biodiesel williamsburg marfa, four loko mcsweeney's cleanse vegan chambray. A really ironic artisan whatever keytar, scenester farm-to-table banksy Austin twitter handle freegan cred raw denim single-origin coffee viral.
-							</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
-						</tr>
-					</tbody>
-				</table>
+				<div id="answer-list">
+					<th:block th:each = "answer : ${question.answers}">
+						<table class="mt-3 border-bottom border-secondary">
+							<tbody>
+								<tr>							
+									<td th:text="${answer.content}">Nội dung câu trả lời.</td>
+								</tr>
+								<tr>									
+									<td><div th:text="${answer.author.fullName} + ' đã trả lời vào lúc ' + ${answer.createTime}" 
+									class="font-italic m-2 text-info">HuuVV đã
+										trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</th:block>
+				</div>				
 				<div>Câu trả lời của bạn</div>
-				<div><textarea class="w-75 mh-100 mb-3 "style="height: 100px"></textarea></div>
-				<button class="btn btn-secondary">Hủy</button>
-				<button class="btn btn-success">Gửi câu trả lời</button>
+				<div><textarea id="content" class="w-75 mh-100 mb-3 "style="height: 100px"></textarea></div>
+				<button id="btnCancle" class="btn btn-secondary">Hủy</button>
+				<button id="btnReply" class="btn btn-success">Gửi câu trả lời</button>
 
 			</div>
 		</div>

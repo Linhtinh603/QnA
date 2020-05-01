@@ -1,4 +1,4 @@
-
+var content = ""
 function connect() {
       
     var socket = new SockJS('/ws');
@@ -8,68 +8,60 @@ function connect() {
 }
 
 function onConnected() {
-    // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/answer', onMessageReceived);
-    console.log("onConnected")
+    stompClient.subscribe(`/topic/answer/${questionId}`, onMessageReceived);
 }
 
 function onError(error) {
-	 console.log("error")
+	 console.log("error when connect ws")
+	 //reload
 }
 function sendMessage(event){
 	 var answer = {
-		 content: "Nội dung câu hỏi"
+		content
 	 }
-	 stompClient.send("/app/reply", {}, JSON.stringify(answer));
-	 console.log("sendmessage")
+	 stompClient.send(`/app/reply/${questionId}`, {}, JSON.stringify(answer));
+	 toastr.success("Bạn đã vừa gửi trả lời cho câu hỏi này.")
 }
 function onMessageReceived(payload){
-	 var message = JSON.parse(payload.body);
-	 console.log("on message receive:  ",message);
+	 var answer = JSON.parse(payload.body);
+	 console.log("on message receive:  ",answer);
+	 var answer_list = document.getElementById('answer-list');
+	 var element = `<table class="mt-3 border-bottom border-secondary">
+						<tbody>	
+							<tr>
+								<td class="align-middle text-secondary" data-toggle="tooltip"
+									data-placement="top"
+									title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
+									<i class="fas fa-check fa-3x"></i>
+								</td>
+								<td>${answer.content}.</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><div class="font-italic m-2 text-info">
+									${answer.author.fullName} đã trả lời vào lúc ${answer.createTime}
+									</div></td>
+							</tr>
+						</tbody>
+					</table>`
+	answer_list.insertAdjacentHTML("beforeend",element)
+	$("#content").val("")
 }
-$(document).ready(function() {
-	connect();
-});
 
 $(document).ready(function() {
+	connect();
 	$("#btnReply").click(function() {
-		var self = this;
-		var path = window.location.pathname.split("/")
-		var idQuestion = path[2]
-		var content = $("[name=content]").val();
-		if (!content||$.trim(content)=='') {
-			toastr.error('Nội dung câu hỏi bị trống (hãy nhập nội dung câu hỏi)', 'Có lỗi xảy ra!');
+		content = $("#content").val()
+		var self = this;		
+		if (!content||content=='') {
+			toastr.error('Nội dung câu hỏi bị trống (hãy nhập nội dung câu hỏi)', 'Dữ liệu nhập không hợp lệ');
+			console.log("cntent: ", content)
 			return;
 		}
 		if (content.length<10) {
-			toastr.error('Nội dung trả lời quá ngắn(phải từ 10 ký tự)', 'Có lỗi xảy ra!');
+			toastr.error('Nội dung trả lời quá ngắn(phải từ 10 ký tự)', 'Dữ liệu nhập không hợp lệ');
 			return;
 		}
-		$.ajax({
-			contentType:'application/json; charset=utf-8',
-			type: 'POST',
-			url:"/questions/"+idQuestion,
-			dataType: 'json',
-			data:JSON.stringify({
-				content }),
-			beforeSend:function(){
-				self.disabled = true;
-			},
-			statusCode: {
-				  302: function() { 
-					  toastr.success('Hết phiên đăng nhập');
-					  window.location.reload()
-				  },
-				  201: function() { 
-					  toastr.success('Đăng câu hỏi thành công')
-					  sendMessage();
-					  window.location.reload()
-				  },
-				  400: function() { toastr.error('Hãy thử lại sau', 'Có lỗi xảy ra!'); }
-			},
-			complete: function() {
-				self.disabled = false;
-			}
-		});
+		sendMessage();
 	})
 });
