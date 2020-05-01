@@ -1,15 +1,14 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<title>Access Denied</title>
+<head th:replace="_head(pageTitle='Đăng nhập')">
 </head>
- 
+
 <body>
- 
-    <h3 th:if="${message != null}" th:utext="${message}" style="color: red;"></h3>
- 
-    <div th:if="${userInfo != null}" th:utext="${userInfo}"></div>
-    <h3>404 - PAGE NOT FOUND</h3>
+
+	<div class="container mt-5">
+		<h1>Trang truy cập không tồn tại</h1>
+	</div>
+
 </body>
- 
+
 </html>
