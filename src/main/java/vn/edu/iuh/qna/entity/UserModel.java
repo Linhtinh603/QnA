@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,7 +31,8 @@ public class UserModel {
 	private Date birthday;
 	private String jobPosition;
 	@DBRef
-	private List<QuestionModel> followingQuestion;
+	@JsonIgnore
+	private List<QuestionModel> followingQuestions;
 	private boolean status;
 	private String role;
 	private String encrytedPassword;

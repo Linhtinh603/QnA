@@ -1,21 +1,21 @@
 <div xmlns:th="http://www.thymeleaf.org"
 	th:replace="user\_layout :: base(content=~{::section},scripts=~{::script})">
-	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:inline="javascript">
 			var originContentString = [[${question.content}]]
 			var originContent = JSON.parse(originContentString);
 			var questionId =  [[${question.id}]]
 			var userId = [[${userId}]]
-			var owner = [[${owner}]]
-			var owner = [[${following}]]
+			var owner = false
 	</script>
 	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
-	 <!-- https://cdnjs.com/libraries/sockjs-client -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-      <!-- https://cdnjs.com/libraries/stomp.js/ -->
-      <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-      
+	<!-- https://cdnjs.com/libraries/sockjs-client -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+	<!-- https://cdnjs.com/libraries/stomp.js/ -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+   
 	<section class="container-fluid">
 		<div class="row">
 			<div class="col-md-2 col-sm-12 mt-3">
@@ -27,10 +27,9 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
-				<h4 th:text="${question.title}"> Question Title </h4> 
-				<span class="align-middle" data-toggle="tooltip" data-placement="top" title="Quan tâm theo dõi câu hỏi này">
-								<i class="" th:classappend="${following} ? 'fas-star text-warning' : 'far-star text-danger'"></i>
-							</span>
+				<h4> <span th:text="${question.title}"></span> <i id="btnFollow" style=" cursor:pointer;" class="align-middle" data-toggle="tooltip" data-placement="top" title="Quan tâm theo dõi câu hỏi này"
+				th:classappend="${following} ? 'fas fa-star text-warning' : 'far fa-star text-success'"></i> 
+				</h4> 
 				<div class="row border-bottom border-dark">
 					<a th:text="${question.category.name}" th:href="@{search(category=${question.category.id})}" class="col-auto">Category</a>
 					<div th:text="${question.view} + ' lượt xem'" class="col-auto font-italic text-warning">124 Lượt xem xem</div>
@@ -68,9 +67,9 @@
 					<tbody th:each = "answer : ${question.answers}" th:if="${answer.id == question.rightAnswerId}">
 						<tr>
 							<td class="align-middle" data-toggle="tooltip" data-placement="top" title="Câu trả lời này đã giải quyết được vấn đề của người hỏi">
-								<i class="fas fa-check fa-3x text-success"></i>
+								<i class="fas fa-check fa-3x text-primary"></i>
 							</td>
-							<td class=".text-info p-2" style="background-color: #e6e6ff;"> Nội dung.
+							<td th:text="${answer.content}" class="text-info p-2" style="background-color: #e6e6ff;"> Nội dung.
 							</td>
 						</tr>
 						<tr>
@@ -96,10 +95,12 @@
 					</th:block>
 				</div>				
 				<div>Câu trả lời của bạn</div>
-				<div><textarea id="content" class="w-75 mh-100 mb-3 "style="height: 100px"></textarea></div>
+				<div>
+					<textarea id="content" class="w-75 mh-100 mb-3 "
+						style="height: 100px"></textarea>
+				</div>
 				<button id="btnCancle" class="btn btn-secondary">Hủy</button>
 				<button id="btnReply" class="btn btn-success">Gửi câu trả lời</button>
-
 			</div>
 		</div>
 

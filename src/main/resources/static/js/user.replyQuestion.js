@@ -24,7 +24,6 @@ function sendMessage(event){
 }
 function onMessageReceived(payload){
 	 var answer = JSON.parse(payload.body);
-	 console.log("on message receive:  ",answer);
 	 var answer_list = document.getElementById('answer-list');
 	 
 	 if(owner){
