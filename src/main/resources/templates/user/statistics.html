@@ -1,0 +1,40 @@
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="user\_layout :: base(content=~{::section},links=~{::link},scripts=~{::script})">
+	<script th:src="@{/static/js/Chart.min.js}" defer></script>
+	<script th:inline="javascript">
+		var reports = [[${report}]]
+		var fromDateStr = [[${#dates.format(from, 'dd-MM-yyyy')}]]
+		var toDateStr = [[${#dates.format(to, 'dd-MM-yyyy')}]]
+	</script>
+	<script th:src="@{/static/js/user.report.js}" defer></script>
+	<section class="container-fluid">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Home</a></li>
+				<li class="breadcrumb-item"><a href="#">Trang cá nhân</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Đăng câu
+					hỏi</li>
+			</ol>
+		</nav>
+		<div class="row m-3">
+			<div class="col-2 list-group list-group-flush">
+				<a th:href="@{/my_profile/posted_questions}"
+					class="list-group-item list-group-item-action ">Câu hỏi của tôi</a>
+				<a th:href="@{/my_profile/star_questions}"
+					class="list-group-item list-group-item-action">Câu hỏi đã theo
+					dõi</a> <a th:href="@{/my_profile/account}"
+					class="list-group-item list-group-item-action">Tài khoản</a> <a
+					th:href="@{/my_profile/statistics}"
+					class="list-group-item list-group-item-action active">Thống kê</a>
+			</div>
+			<div class="col">
+				<p>Thống kê 30 ngày gần đây</p>
+				<div class="row">
+					<div class="col-md-10 col-12 pr-md-5">
+						<canvas id="report"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>

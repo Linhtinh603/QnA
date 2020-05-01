@@ -9,8 +9,10 @@
 		</nav>
 		<div class="row m-3">
 			<div class="col-2 list-group list-group-flush">
-				<a href="../my_profile/posted_questions" class="list-group-item list-group-item-action">Câu hỏi đã đăng</a>
-				<a href="../my_profile/star_questions" class="list-group-item list-group-item-action active">Câu hỏi theo dõi</a>
+				<a th:href="@{/my_profile/posted_questions}" class="list-group-item list-group-item-action">Câu hỏi của tôi</a>
+				<a th:href="@{/my_profile/star_questions}" class="list-group-item list-group-item-action active">Câu hỏi đã theo dõi</a>
+				<a th:href="@{/my_profile/account}" class="list-group-item list-group-item-action ">Tài khoản</a>
+				<a th:href="@{/my_profile/statistics}" class="list-group-item list-group-item-action ">Thống kê</a>
 			</div>
 			<div class="col">
 				<div class="d-none"> KhÃƒÂ´ng cÃƒÂ³ cÃƒÂ¢u hÃ¡Â»ï¿½i Ã„â€˜ÃƒÂ£ theo dÃƒÂµi tronh danh sÃƒÂ¡ch</div>

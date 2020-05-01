@@ -1,0 +1,32 @@
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="user\_layout :: base(content=~{::section},links=~{::link},scripts=~{::script})">
+	<section class="container-fluid">
+		<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Home</a></li>
+				<li class="breadcrumb-item"><a href="#">Trang cá nhân</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Tài khoản của tôi</li>
+			</ol>
+		</nav>
+		<div class="row m-3">
+			<div class="col-2 list-group list-group-flush">
+				<a th:href="@{/my_profile/posted_questions}"
+					class="list-group-item list-group-item-action ">Câu hỏi của tôi</a>
+				<a th:href="@{/my_profile/star_questions}"
+					class="list-group-item list-group-item-action">Câu hỏi đã theo
+					dõi</a> <a th:href="@{/my_profile/account}"
+					class="list-group-item list-group-item-action active">Tài khoản</a>
+				<a th:href="@{/my_profile/statistics}"
+					class="list-group-item list-group-item-action">Thống kê</a>
+			</div>
+			<div class="col">
+				<h1>Thông tin tài khoản</h1>
+				<p>Tên đăng nhập:&nbsp;<span th:text="${user.userName}"></span></p>
+				<p>Tên đệm:&nbsp;<span th:text="${user.fullName}"></span></p>
+				<p>Ngày sinh:&nbsp;<span th:text="${#dates.format(user.birthday,'dd-MM-yyyy' )}"></span></p>
+				<p>Vị trí công việc:&nbsp;<span th:text="${user.jobPosition}"></span></p>
+				<p>Ngày khởi tạo:&nbsp;<span th:text="${#dates.format(user.createTime,'dd-MM-yyyy' )}"></span></p>
+			</div>
+		</div>
+	</section>
+</div>

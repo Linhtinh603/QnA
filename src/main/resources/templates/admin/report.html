@@ -1,5 +1,12 @@
 <div xmlns:th="http://www.thymeleaf.org"
 	th:replace="admin\_layout :: base(content=~{::section})">
+	<script th:src="@{/static/js/Chart.min.js}" defer></script>
+	<script th:inline="javascript">
+		var reports = [[${report}]]
+		var fromDateStr = [[${#dates.format(from, 'dd-MM-yyyy')}]]
+		var toDateStr = [[${#dates.format(to, 'dd-MM-yyyy')}]]
+	</script>
+	<script th:src="@{/static/js/admin.report.js}" defer></script>
 	<section class="container-fluid">
 		<div class="row">
 			<div class="col-md-2 col-sm-12 mt-3">
@@ -12,24 +19,17 @@
 			<div class="col-md-10 col-sm-12 mt-5">
 				<div class="row justify-content-between">
 					<div class="col-4">
-<!-- 						<form class="form-inline"> -->
-<!-- 							<div class="form-group mx-sm-3 mb-2"> -->
-<!-- 								<label for="userName" class="sr-only">Tên người dùng</label> <input -->
-<!-- 									type="text" class="form-control" id="userName"> -->
-<!-- 							</div> -->
-<!-- 							<button type="submit" class="btn btn-primary mb-2">Lọc -->
-<!-- 								tên</button> -->
-<!-- 						</form> -->
+
 					</div>
 					<div class="col-8">
-						<form class="form-inline justify-content-end">
+						<form id="form" th:action="@{/admin}" class="form-inline justify-content-end" method="GET">
 							<div class="form-group mb-2">
-								<label for="fromDate" class="sr-only">Từ ngày</label> <input
-									class="form-control" id="fromDate" type="date" />
+								<label for="from"  >Từ ngày:&nbsp;</label> <input
+									class="form-control" id="from" name="from" type="date" th:value="${#dates.format(from, 'yyyy-MM-dd')}"/>
 							</div>
 							<div class="form-group mx-sm-3 mb-2">
-								<label for="toDate" class="sr-only">Đến ngày</label> <input
-									class="form-control" id="toDate" type="date" />
+								<label for="to" >Đến ngày:&nbsp;</label> <input
+									class="form-control" id="to" name="to" type="date" th:value="${#dates.format(to, 'yyyy-MM-dd')}"/>
 							</div>
 							<button type="submit" class="btn btn-primary mb-2">Lọc
 								ngày</button>
@@ -37,37 +37,8 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-12">
-						<table id="tableAdmin" class="table table-bordered table-striped">
-							<thead>
-								<tr>
-									<th scope="col">Người dùng</th>
-									<th scope="col">Số câu hỏi</th>
-									<th scope="col">Số câu trả lời</th>
-									<th scope="col">Số câu trả lời được chấp nhận</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th scope="row">huuvv</th>
-									<td>4</td>
-									<td>10</td>
-									<td>5</td>
-								</tr>
-								<tr>
-									<th scope="row">hunglv</th>
-									<td>0</td>
-									<td>5</td>
-									<td>1</td>
-								</tr>
-								<tr>
-									<th scope="row">lualt</th>
-									<td>1</td>
-									<td>2</td>
-									<td>1</td>
-								</tr>
-							</tbody>
-						</table>
+					<div class="col-md-10 col-12 pr-md-5">
+						<canvas id="report"></canvas>
 					</div>
 				</div>
 			</div>

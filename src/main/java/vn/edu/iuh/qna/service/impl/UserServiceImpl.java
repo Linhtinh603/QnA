@@ -1,5 +1,6 @@
 package vn.edu.iuh.qna.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,11 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 
 	@Override
+	public Optional<UserModel> findById(String id) {
+		return userRepository.findById(id);
+	}
+
+	@Override
 	public Optional<UserModel> findByUserName(String userName) {
 		return userRepository.findByUserName(userName);
 	}
@@ -23,7 +29,9 @@ public class UserServiceImpl implements UserService {
 	public void save(UserModel user) {
 		userRepository.save(user);
 	}
-	
-	
 
+	@Override
+	public List<UserModel> findByRole(String role) {
+		return userRepository.findByRole(role);
+	}
 }

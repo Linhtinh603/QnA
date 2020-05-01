@@ -13,20 +13,21 @@ import vn.edu.iuh.qna.validator.BirthdayContraint;
 
 @Data
 public class UserInfoReqDto {
-	@NotBlank(message="Họ và tên bị trống")
+	private String id;
+	@NotBlank(message = "Họ và tên bị trống")
 	private String fullName;
-	@NotNull(message="Ngày sinh bị trống")
+	@NotNull(message = "Ngày sinh bị trống")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Past(message = "Ngày sinh không được quá ngày hiện tại")
 	@BirthdayContraint
 	private Date birthday;
-	@NotBlank(message="Vị trí công việc bị trống")
+	@NotBlank(message = "Vị trí công việc bị trống")
 	private String jobPosition;
-	@NotBlank(message="Mật khẩu bị trống")
+	@NotBlank(message = "Mật khẩu bị trống")
 	private String password;
 	@NotNull(message = "Xác nhận mật khẩu không khớp")
 	private String confirmPassword;
-	@NotBlank(message="Tên tài khoản bị trống")
+	@NotBlank(message = "Tên tài khoản bị trống")
 	private String userName;
 
 	public String getPassword() {

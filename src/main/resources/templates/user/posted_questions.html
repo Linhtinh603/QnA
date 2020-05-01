@@ -1,16 +1,18 @@
 <div xmlns:th="http://www.thymeleaf.org" th:replace="user\_layout :: base(content=~{::section})">
-	<section>
+	<section class="container-fluid">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="#">Home</a></li>
 				<li class="breadcrumb-item"><a href="#">Trang cá nhân</a></li>
-				<li class="breadcrumb-item active" aria-current="page">Danh sách câu hỏi đã đăng</li>
+				<li class="breadcrumb-item active" aria-current="page">Câu hỏi của tôi</li>
 			</ol>
 		</nav>
 		<div class="row m-3">
 			<div class="col-2 list-group list-group-flush">
-				<a href="../my_profile/posted_questions" class="list-group-item list-group-item-action active">Câu hỏi đã đăng</a>
-				<a href="../my_profile/star_questions" class="list-group-item list-group-item-action ">Câu hỏi đã theo dõi</a>
+				<a th:href="@{/my_profile/posted_questions}" class="list-group-item list-group-item-action active">Câu hỏi của tôi</a>
+				<a th:href="@{/my_profile/star_questions}" class="list-group-item list-group-item-action ">Câu hỏi đã theo dõi</a>
+				<a th:href="@{/my_profile/account}" class="list-group-item list-group-item-action ">Tài khoản</a>
+				<a th:href="@{/my_profile/statistics}" class="list-group-item list-group-item-action ">Thống kê</a>
 			</div>
 			<div class="col">
 				<div class="d-none"> Không có câu hỏi đã theo dõi tronh danh sách</div>

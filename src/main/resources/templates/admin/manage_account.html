@@ -26,28 +26,18 @@
 									<th scope="col">Họ và tên</th>
 									<th scope="col">Vị trí công việc</th>
 									<th scope="col">Đang hoạt động</th>
+									<th scope="col">Tác vụ</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<th scope="row">huuvv</th>
-									<td>Võ Văn Hữu</td>
-									<td>Intern</td>
+								<tr th:each="user : ${users}">
+									<th scope="row" th:text="${user.userName}"></th>
+									<td th:text="${user.fullName}"></td>
+									<td th:text="${user.jobPosition}"></td>
 									<td>
-										<input type="checkbox" />
+										<input type="checkbox" th:checked="${user.status}" th:id="${user.id}" th:data-user-name="${user.userName}" onchange="changeUserStatus.bind(this)()" />
 									</td>
-								</tr>
-								<tr>
-									<th scope="row">hunglv</th>
-									<td>Lê Vũ Hùng</td>
-									<td>Intern</td>
-									<td><input type="checkbox" /></td>
-								</tr>
-								<tr>
-									<th scope="row">lualt</th>
-									<td>Lê Thị Lụa</td>
-									<td>Hr</td>
-									<td><input type="checkbox" /></td>
+									<td><a th:href="@{'/admin/edit_account/'+${user.id}}">Sửa</a></td>
 								</tr>
 							</tbody>
 						</table>

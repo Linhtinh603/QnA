@@ -1,10 +1,11 @@
 package vn.edu.iuh.qna.controller;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,16 +32,21 @@ import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.service.CategoryService;
 import vn.edu.iuh.qna.service.QuestionService;
+import vn.edu.iuh.qna.service.ReportService;
+import vn.edu.iuh.qna.service.ReportService.CountReportDto;
 import vn.edu.iuh.qna.service.UserService;
 import vn.edu.iuh.qna.utils.StringUtils;
+import static vn.edu.iuh.qna.config.WebSecurityConfig.ROLE_USER;
 
-@Secured("ROLE_USER")
+@Secured(ROLE_USER)
 @Controller
 public class UserController {
 	@Autowired
 	private CategoryService categoryService;
 	@Autowired
 	private QuestionService questionService;
+	@Autowired
+	private ReportService reportService;
 	@Autowired
 	private UserService userService;
 
@@ -76,7 +81,8 @@ public class UserController {
 		model.addAttribute("key", key);
 		List<CategoryModel> listCategory = categoryService.findAll();
 		model.addAttribute("categories", listCategory);
-		Page<QuestionModel> listQuestion = questionService.findByTitleNormalizedContaining(StringUtils.normalize(key), PageRequest.of(page - 1, size));
+		Page<QuestionModel> listQuestion = questionService.findByTitleNormalizedContaining(StringUtils.normalize(key),
+				PageRequest.of(page - 1, size));
 		model.addAttribute("questions", listQuestion);
 		return "user/search";
 	}
@@ -270,8 +276,34 @@ public class UserController {
 
 	@GetMapping("/my_profile/star_questions")
 	public String starQuestion() {
-		
+
 		return "user/star_questions";
+	}
+
+	@GetMapping("/my_profile/account")
+	public String account(Model model, Authentication authentication) {
+		Object principal = authentication.getPrincipal();
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		model.addAttribute("user", userDetail.getUser());
+		return "user/account";
+	}
+
+	@GetMapping("/my_profile/statistics")
+	public String statistics(Model model, Authentication authentication) {
+		Object principal = authentication.getPrincipal();
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+
+		Calendar cal = Calendar.getInstance();
+		Date toDate = cal.getTime();
+		cal.add(Calendar.MONTH, -1);
+		Date fromDate = cal.getTime();
+
+		Map<String, List<CountReportDto>> report = reportService.queryUserReport(userDetail.getUser(), fromDate,
+				toDate);
+		model.addAttribute("report", report);
+		model.addAttribute("from", fromDate);
+		model.addAttribute("to", toDate);
+		return "user/statistics";
 	}
 
 }
