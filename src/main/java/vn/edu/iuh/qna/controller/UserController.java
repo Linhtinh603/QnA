@@ -21,12 +21,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import vn.edu.iuh.qna.dto.UserDetailReqDto;
-import vn.edu.iuh.qna.entity.AnswerModel;
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.entity.UserModel;
@@ -129,18 +129,23 @@ public class UserController {
 		if(question.get().isDeleted()) {
 			return "404Page";
 		}
-		if(userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
-			model.addAttribute("owner", true);
-		}else {
-			model.addAttribute("owner", false);
-		}
 		model.addAttribute("question",question.get());
 		if(question.get().getAuthor().getUserName().equals(userDetail.getUsername())) {
-			model.addAttribute("answer", new AnswerModel());
 			return "user/view_question";
 		}
+		
 		question.get().setView(question.get().getView() + 1);
 		questionService.save(question.get());
+//		userDetail.getUser().setFollowingQuestions(new ArrayList<QuestionModel>());
+//		userService.save(userDetail.getUser());
+		boolean following = false;	
+		for(QuestionModel followingQuestion : userDetail.getUser().getFollowingQuestions()) {
+			if(followingQuestion.getId().equals(id)) {
+				following = true;
+				break;
+			}
+		}
+		model.addAttribute("following", following);
 		return "user/reply_question";
 	}
 
@@ -220,12 +225,13 @@ public class UserController {
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		UserModel user = userDetail.getUser();
 		Optional<QuestionModel> question = questionService.finById(id);		
-		user.getFollowingQuestion().add(question.get());
+		user.getFollowingQuestions().add(question.get());
 		userService.save(user);
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
-	@GetMapping("/questions/{id}/right-answer")
+	@ResponseBody
+	@PutMapping("/questions/{id}/right-answer")
 	public ResponseEntity<String> chooseRightAnswer(@PathVariable String id, @RequestParam String rightAnswerId ,Authentication authentication){
 		Object principal = authentication.getPrincipal();
 		if (!(principal instanceof UserDetailReqDto)) {
@@ -243,20 +249,20 @@ public class UserController {
 	}
 	
 	@GetMapping("/questions/{id}/cancle-right-answer")
-	public ResponseEntity<String> cancleRightAnswer(@PathVariable String id, @RequestParam String rightAnswerId ,Authentication authentication){
+	public String cancleRightAnswer(@PathVariable String id, Authentication authentication){
 		Object principal = authentication.getPrincipal();
 		if (!(principal instanceof UserDetailReqDto)) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			return "redirect:/";
 		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		Optional<QuestionModel> question = questionService.finById(id);		
 		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
-			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+			return "403Page";
 		}
 		question.get().setRightAnswerId("");
 		questionService.save(question.get());
 		
-		return new ResponseEntity<String>(HttpStatus.OK);
+		return "redirect:/questions/"+id;
 	}
 
 	@GetMapping({ "/my_profile", "/my_profile/posted_questions" })

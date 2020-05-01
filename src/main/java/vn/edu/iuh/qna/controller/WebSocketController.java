@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -19,6 +21,8 @@ import vn.edu.iuh.qna.service.QuestionService;
 
 @Controller
 public class WebSocketController {
+	private static final Logger log = LoggerFactory.getLogger(WebSocketController.class);
+
 	@Autowired
 	private QuestionService questionService;
 	@MessageMapping("reply/{questionId}")
@@ -35,7 +39,12 @@ public class WebSocketController {
 		answer.setCreateTime(new Date());
 		Optional<QuestionModel> question = questionService.finById(questionId);
 		question.get().getAnswers().add(answer);
+		try {
 		questionService.save(question.get());
+		}catch(Exception e) {
+			log.debug("============== Loi save");
+		}
+
         return answer;
     }
 }

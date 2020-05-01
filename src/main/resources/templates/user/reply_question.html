@@ -1,20 +1,21 @@
 <div xmlns:th="http://www.thymeleaf.org"
 	th:replace="user\_layout :: base(content=~{::section},scripts=~{::script})">
-	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:inline="javascript">
 			var originContentString = [[${question.content}]]
 			var originContent = JSON.parse(originContentString);
 			var questionId =  [[${question.id}]]
 			var userId = [[${userId}]]
-			var owner = [[${owner}]]
+			var owner = false
 	</script>
 	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
-	 <!-- https://cdnjs.com/libraries/sockjs-client -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-      <!-- https://cdnjs.com/libraries/stomp.js/ -->
-      <script  src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-      
+	<!-- https://cdnjs.com/libraries/sockjs-client -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+	<!-- https://cdnjs.com/libraries/stomp.js/ -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+   
 	<section class="container-fluid">
 		<div class="row">
 			<div class="col-md-2 col-sm-12 mt-3">
@@ -26,14 +27,16 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
-				<h4 th:text="${question.title}"> Question Title <i id="btnFollow" class="fas fa-star">Theo dõi</i> </h4>
+				<h4> <span th:text="${question.title}"></span> <i id="btnFollow" style=" cursor:pointer;" class="align-middle" data-toggle="tooltip" data-placement="top" title="Quan tâm theo dõi câu hỏi này"
+				th:classappend="${following} ? 'fas fa-star text-warning' : 'far fa-star text-success'"></i> 
+				</h4> 
 				<div class="row border-bottom border-dark">
 					<a th:text="${question.category.name}" th:href="@{search(category=${question.category.id})}" class="col-auto">Category</a>
 					<div th:text="${question.view} + ' lượt xem'" class="col-auto font-italic text-warning">124 Lượt xem xem</div>
 					<div th:text="'Tạo bởi ' + ${question.author.fullName} + ' ('+${question.author.userName}+') '" 
 						class="col-auto font-italic text-warning">Tạo bởi HuuVV</div>
 					<div class="col-auto font-italic text-secondary" th:if="${question.updateTime != null}" 
-					th:text="'Chỉnh sửa lần cuối vào '+${question.updateTime}">Chỉnh sửa lần cuối vào 26-4-2020 12h54</div>
+					th:text="'Chỉnh sửa lần cuối vào '+ ${#dates.format(question.updateTime, 'dd-MMM-yyyy HH:mm')}">Chỉnh sửa lần cuối vào 26-4-2020 12h54</div>
 				</div>
 
 				<table class="mt-4 shadow-sm rounded .bg-secondary">
@@ -44,7 +47,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><div th:text="${question.author.fullName} + ' đã hỏi lúc ' + ${question.createTime}" 
+							<td><div th:text="${question.author.fullName} + ' đã hỏi lúc ' + ${#dates.format(question.createTime, 'dd-MMM-yyyy HH:mm')}" 
 								class="font-italic m-2 text-info">HuuVV đã
 									hỏi lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
@@ -64,14 +67,14 @@
 					<tbody th:each = "answer : ${question.answers}" th:if="${answer.id == question.rightAnswerId}">
 						<tr>
 							<td class="align-middle" data-toggle="tooltip" data-placement="top" title="Câu trả lời này đã giải quyết được vấn đề của người hỏi">
-								<i class="fas fa-check fa-3x text-success"></i>
+								<i class="fas fa-check fa-3x text-primary"></i>
 							</td>
-							<td class=".text-info p-2" style="background-color: #e6e6ff;"> Nội dung.
+							<td th:text="${answer.content}" class="text-info p-2" style="background-color: #e6e6ff;"> Nội dung.
 							</td>
 						</tr>
 						<tr>
 							<td></td>
-							<td><div class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+							<td><div th:text="${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}" class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 						</tr>
 					</tbody>
 				</table>
@@ -83,7 +86,7 @@
 									<td th:text="${answer.content}">Nội dung câu trả lời.</td>
 								</tr>
 								<tr>									
-									<td><div th:text="${answer.author.fullName} + ' đã trả lời vào lúc ' + ${answer.createTime}" 
+									<td><div th:text="${answer.author.fullName} + ' đã trả lời vào lúc ' + ${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}" 
 									class="font-italic m-2 text-info">HuuVV đã
 										trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
 								</tr>
@@ -92,10 +95,12 @@
 					</th:block>
 				</div>				
 				<div>Câu trả lời của bạn</div>
-				<div><textarea id="content" class="w-75 mh-100 mb-3 "style="height: 100px"></textarea></div>
+				<div>
+					<textarea id="content" class="w-75 mh-100 mb-3 "
+						style="height: 100px"></textarea>
+				</div>
 				<button id="btnCancle" class="btn btn-secondary">Hủy</button>
 				<button id="btnReply" class="btn btn-success">Gửi câu trả lời</button>
-
 			</div>
 		</div>
 
