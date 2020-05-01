@@ -1,8 +1,23 @@
 <div xmlns:th="http://www.thymeleaf.org"
 	th:replace="user\_layout :: base(content=~{::section},scripts=~{::script})">
 	<script th:src="@{/static/js/user.editQuestion.js}" defer></script>
-	<section class="container">
-		<h1>Chỉnh sửa câu hỏi</h1>
+	<section class="container-fluid">
+			<nav aria-label="breadcrumb">
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="#">Home</a></li>
+				<li class="breadcrumb-item"><a href="#">Trang cá nhân</a></li>
+				<li class="breadcrumb-item active" aria-current="page">Sửa nội dung câu hỏi</li>
+			</ol>
+		</nav>
+		<div class="row m-3">
+			<div class="col-2 list-group list-group-flush">
+				<a th:href="@{/my_profile/posted_questions}" class="list-group-item list-group-item-action  active">Câu hỏi của tôi</a>
+				<a th:href="@{/my_profile/star_questions}" class="list-group-item list-group-item-action">Câu hỏi đã theo dõi</a>
+				<a th:href="@{/my_profile/account}" class="list-group-item list-group-item-action ">Tài khoản</a>
+				<a th:href="@{/my_profile/statistics}" class="list-group-item list-group-item-action ">Thống kê</a>
+			</div>
+			<div class="col">
+		<h1>Sửa nội dung câu hỏi</h1>
 		<form name='f' th:action="@{/questions/new}" th:object="${question}"
 			method='POST' class="mt-3">
 			<input type="hidden" th:field="*{id}" />
@@ -41,10 +56,12 @@
 				<div class="col-sm-2 offset-sm-2">
 					<button id="btnEdit" type="button" class="btn btn-primary">Lưu</button>
 				</div>
-				<div class="col-sm-2 offset-sm-2">
+				<div class="col-sm-2">
 					<button id="btnReset" type="button" class="btn btn-primary">Khôi phục</button>
 				</div>
 			</div>
 		</form>
+					</div>
+		</div>
 	</section>
 </div>

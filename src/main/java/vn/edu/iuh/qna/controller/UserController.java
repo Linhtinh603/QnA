@@ -1,10 +1,12 @@
 package vn.edu.iuh.qna.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,8 @@ import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.service.CategoryService;
 import vn.edu.iuh.qna.service.QuestionService;
+import vn.edu.iuh.qna.service.ReportService;
+import vn.edu.iuh.qna.service.ReportService.CountReportDto;
 import vn.edu.iuh.qna.utils.StringUtils;
 
 @Secured("ROLE_USER")
@@ -38,6 +42,8 @@ public class UserController {
 	private CategoryService categoryService;
 	@Autowired
 	private QuestionService questionService;
+	@Autowired
+	private ReportService reportService;
 
 	@GetMapping("/")
 	public String home(Model model, @RequestParam(required = false, name = "category") String categoryId,
@@ -70,7 +76,8 @@ public class UserController {
 		model.addAttribute("key", key);
 		List<CategoryModel> listCategory = categoryService.findAll();
 		model.addAttribute("categories", listCategory);
-		Page<QuestionModel> listQuestion = questionService.findByTitleNormalizedContaining(StringUtils.normalize(key), PageRequest.of(page - 1, size));
+		Page<QuestionModel> listQuestion = questionService.findByTitleNormalizedContaining(StringUtils.normalize(key),
+				PageRequest.of(page - 1, size));
 		model.addAttribute("questions", listQuestion);
 		return "user/search";
 	}
@@ -111,15 +118,15 @@ public class UserController {
 		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		model.addAttribute("userId", userDetail.getUser().getId());
-		
+
 		List<CategoryModel> listCategory = categoryService.findAll();
 		model.addAttribute("categories", listCategory);
 		Optional<QuestionModel> question = questionService.finById(id);
-		if(question.get().isStatus() == false) {
+		if (question.get().isStatus() == false) {
 			return "404Page";
 		}
-		model.addAttribute("question",question.get());
-		if(question.get().getAuthor().getUserName().equals(userDetail.getUsername())) {
+		model.addAttribute("question", question.get());
+		if (question.get().getAuthor().getUserName().equals(userDetail.getUsername())) {
 			model.addAttribute("answer", new AnswerModel());
 			return "user/view_question";
 		}
@@ -177,8 +184,34 @@ public class UserController {
 
 	@GetMapping("/my_profile/star_questions")
 	public String starQuestion() {
-		
+
 		return "user/star_questions";
+	}
+
+	@GetMapping("/my_profile/account")
+	public String account(Model model, Authentication authentication) {
+		Object principal = authentication.getPrincipal();
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		model.addAttribute("user", userDetail.getUser());
+		return "user/account";
+	}
+
+	@GetMapping("/my_profile/statistics")
+	public String statistics(Model model, Authentication authentication) {
+		Object principal = authentication.getPrincipal();
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+
+		Calendar cal = Calendar.getInstance();
+		Date toDate = cal.getTime();
+		cal.add(Calendar.MONTH, -1);
+		Date fromDate = cal.getTime();
+
+		Map<String, List<CountReportDto>> report = reportService.queryUserReport(userDetail.getUser(), fromDate,
+				toDate);
+		model.addAttribute("report", report);
+		model.addAttribute("from", fromDate);
+		model.addAttribute("to", toDate);
+		return "user/statistics";
 	}
 
 }
