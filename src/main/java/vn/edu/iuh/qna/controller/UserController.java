@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -296,8 +297,18 @@ public class UserController {
 	}
 
 	@GetMapping("/my_profile/star_questions")
-	public String starQuestion() {
-
+	public String starQuestion(Model model, Authentication authentication,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "5") int size) {
+		
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return "redirect:/";
+		}
+		UserDetailReqDto user = (UserDetailReqDto) principal;
+		Page<QuestionModel> followingQuestions = new PageImpl<QuestionModel>(user.getUser().getFollowingQuestions());
+		
+		model.addAttribute("followingQuestions", followingQuestions);
 		return "user/star_questions";
 	}
 
