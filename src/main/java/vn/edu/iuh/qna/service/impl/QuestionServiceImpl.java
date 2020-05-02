@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
+import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.repository.QuestionRepository;
 import vn.edu.iuh.qna.service.QuestionService;
 
@@ -49,8 +50,12 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
+	public Page<QuestionModel> findByAuthor(UserModel author, Pageable pageable) {
+		return questionRepository.findByAuthorAndIsDeletedFalse(author, pageable);
+	}
+	
+	@Override
 	public void delete(String id) {
 		questionRepository.deleteById(id);
 	}
-
 }

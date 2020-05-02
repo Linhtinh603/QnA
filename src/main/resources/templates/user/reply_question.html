@@ -6,6 +6,7 @@
 			var questionId =  [[${question.id}]]
 			var userId = [[${userId}]]
 			var owner = false
+			var following = [[${following}]]
 	</script>
 	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
@@ -31,14 +32,37 @@
 				th:classappend="${following} ? 'fas fa-star text-warning' : 'far fa-star text-success'"></i> 
 				</h4> 
 				<div class="row border-bottom border-dark">
-					<a th:text="${question.category.name}" th:href="@{search(category=${question.category.id})}" class="col-auto">Category</a>
+					<a th:text="'Danh mục: ' + ${question.category.name}" th:href="@{search(category=${question.category.id})}" class="col-auto">Category</a>
 					<div th:text="${question.view} + ' lượt xem'" class="col-auto font-italic text-warning">124 Lượt xem xem</div>
-					<div th:text="'Tạo bởi ' + ${question.author.fullName} + ' ('+${question.author.userName}+') '" 
-						class="col-auto font-italic text-warning">Tạo bởi HuuVV</div>
+					<a th:href="@{/profile/{id}(id=${question.author.userName})}">
+						<span th:text="'Tạo bởi ' + ${question.author.fullName} + ' ('+${question.author.userName}+') '" 
+						class="col-auto font-italic text-warning">Tạo bởi HuuVV</span>
+					</a>
 					<div class="col-auto font-italic text-secondary" th:if="${question.updateTime != null}" 
-					th:text="'Chỉnh sửa lần cuối vào '+ ${#dates.format(question.updateTime, 'dd-MMM-yyyy HH:mm')}">Chỉnh sửa lần cuối vào 26-4-2020 12h54</div>
+					th:text="'Đã chỉnh sửa nội dung vào '+ ${#dates.format(question.updateTime, 'dd-MMM-yyyy HH:mm')}">Đã chỉnh sửa nội dung vào 26-4-2020 12h54</div>
 				</div>
-
+				
+						<!-- Modal Follow -->
+		<div class="modal fade" id="unfollow-question-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title text-danger" id="exampleModalLongTitle">Xác nhận </h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Bạn có muốn bỏ câu hỏi này ra khỏi danh sách theo dõi?</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-info" data-dismiss="modal">Không</button>
+		        <button id="btnUnfollow" type="button" class="btn btn-success">Đồng ý</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
 				<table class="mt-4 shadow-sm rounded .bg-secondary">
 					<tbody>
 						<tr>
@@ -47,13 +71,19 @@
 							</td>
 						</tr>
 						<tr>
-							<td><div th:text="${question.author.fullName} + ' đã hỏi lúc ' + ${#dates.format(question.createTime, 'dd-MMM-yyyy HH:mm')}" 
-								class="font-italic m-2 text-info">HuuVV đã
-									hỏi lúc 12h35 ngày 25-6-2020</div></td>
+							<td>
+								<div>
+									<a th:href="@{/profile/{id}(id=${question.author.userName})}" th:text="${question.author.fullName}"
+										class="font-italic text-info">Name</a> 
+									<span
+										th:text="'đã hỏi lúc ' + ${#dates.format(question.createTime, 'dd-MMM-yyyy HH:mm')}"
+										class="font-italic text-info"> Time</span>
+								</div>
+							</td>
 						</tr>
 					</tbody>
 				</table>
-				<div th:if = "${#lists.isEmpty(question.answers)}"
+				<div id="noAnswerLable" th:if = "${#lists.isEmpty(question.answers)}"
 						th:text="'Chưa có câu trả lời cho câu hỏi này, hãy là người đầu tiên trả lời câu hỏi.'"
 						class="mt-3 text-monospace text-danger ">
 						Chưa có câu trả lời
@@ -74,7 +104,15 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><div th:text="${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}" class="font-italic m-2 text-info">HuuVV đã trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+							<td>
+								<div>
+									<a th:href="@{/profile/{id}(id=${answer.author.userName})}" th:text="${answer.author.fullName}"
+										class="font-italic text-info">Name</a> 
+									<span
+										th:text="'đã trả lời lúc ' + ${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}"
+										class="font-italic text-info"> Time</span>
+								</div>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -86,9 +124,15 @@
 									<td th:text="${answer.content}">Nội dung câu trả lời.</td>
 								</tr>
 								<tr>									
-									<td><div th:text="${answer.author.fullName} + ' đã trả lời vào lúc ' + ${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}" 
-									class="font-italic m-2 text-info">HuuVV đã
-										trả lời vào lúc 12h35 ngày 25-6-2020</div></td>
+									<td>
+										<div>
+											<a th:href="@{/profile/{id}(id=${answer.author.userName})}" th:text="${answer.author.fullName}"
+												class="font-italic text-info">Name</a> 
+											<span
+												th:text="'đã hỏi lúc ' + ${#dates.format(answer.createTime, 'dd-MMM-yyyy HH:mm')}"
+												class="font-italic text-info"> Time</span>
+										</div>
+									</td>
 								</tr>
 							</tbody>
 						</table>

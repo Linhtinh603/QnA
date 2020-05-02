@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
+import vn.edu.iuh.qna.entity.UserModel;
 
 @Service
 public interface QuestionService {
@@ -18,5 +19,6 @@ public interface QuestionService {
 	List<QuestionModel> findAll();
 	Page<QuestionModel> findByCategory(CategoryModel category,Pageable pageable);
 	Page<QuestionModel> findByTitleNormalizedContaining(String titleNormalized,Pageable pageable);
+	Page<QuestionModel> findByAuthor(UserModel author, Pageable pageable);
 	void delete(String id);
 }
