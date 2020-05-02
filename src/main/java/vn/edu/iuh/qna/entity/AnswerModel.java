@@ -26,7 +26,7 @@ public class AnswerModel {
 	@Indexed
 	@DBRef
 	private UserModel author;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy HH:mm", locale = "vi-VN")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MMM-yyyy HH:mm", locale = "vi")
 	private Date createTime;
 	
 }

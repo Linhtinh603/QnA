@@ -21,10 +21,10 @@
 		<div class="row">
 			<div class="col-md-2 col-sm-12 mt-3">
 				<nav class="nav nav-pills flex-column ">
-					<a class="nav-item nav-link active" th:href="@{/}">Tất cả</a> <a
-						th:each="category : ${categories}" class="nav-item nav-link"
-						th:text="${category.name}"
-						th:href="@{/search(category=${category.id})}"></a>
+					<a class="nav-item nav-link" th:classappend="${categoryId == null} ? 'active'" th:href="@{/}">Tất cả</a> 
+					<a	th:each="category : ${categories}" class="nav-item nav-link"
+						th:text="${category.name}" th:classappend="${category.id == categoryId} ? 'active'"
+						th:href="@{/(category=${category.id})}"></a>
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">

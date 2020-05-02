@@ -6,9 +6,11 @@ import static vn.edu.iuh.qna.config.WebSecurityConfig.ROLE_USER;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -97,6 +99,7 @@ public class AdminController {
 				userModel.setBirthday(user.getBirthday());
 				userModel.setCreateTime(new Date());
 				userModel.setEncrytedPassword(EncrytedPasswordUtils.encrytePassword(user.getPassword()));
+				userModel.setFollowingQuestions(new LinkedList<>());
 				userModel.setFullName(user.getFullName());
 				userModel.setJobPosition(user.getJobPosition());
 				userModel.setRole(ROLE_USER);
@@ -168,7 +171,7 @@ public class AdminController {
 
 	@GetMapping("manage_questions")
 	public String manageQuestions(Model model) {
-		List<QuestionModel> questions = questionService.findAll();
+		List<QuestionModel> questions = questionService.findAll().stream().filter(q -> !q.isDeleted()).collect(Collectors.toList());
 		model.addAttribute("questions", questions);
 		return "admin/manage_question";
 	}
@@ -180,7 +183,8 @@ public class AdminController {
 		if (!questionOp.isPresent()) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
-		questionService.delete(questionOp.get().getId());
+		questionOp.get().setDeleted(true);
+		questionService.save(questionOp.get());
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 
