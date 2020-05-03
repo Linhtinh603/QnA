@@ -37,33 +37,64 @@ $(document).ready(function() {
 	});
 	
 	$("#btnFollow").click(function() {
-		$.ajax({
-			contentType:'application/json; charset=utf-8',
-			type: 'POST',
-			url:"/questions/follow?"+ $.param({"id":questionId}),
-			beforeSend:function(){
-				self.disabled = true;
-			},
-			statusCode: {
-				  302: function() { 
-					  toastr.success('Hết phiên đăng nhập');
-					  window.location.reload()
-				  },
-				  400: function() { 
-					  toastr.error('Hãy thử lại sau', 'Có lỗi xảy ra!'); 
-				  },
-				  200: function() { 
-					  toastr.success('Hãy kiểm tra lại ở trong hồ sơ cá nhân','Theo dõi câu hỏi thành công')
-				  },
-			},
-			complete: function() {
-				self.disabled = false;
-			}
-		});
+	    if(following){
+	        $("#unfollow-question-modal").modal()
+	        $("#btnUnfollow").click(function(){
+	            $.ajax({
+	                contentType:'application/json; charset=utf-8',
+	                type: 'POST',
+	                url:"/questions/unfollow?"+ $.param({"id":questionId}),
+	                beforeSend:function(){
+	                    self.disabled = true;
+	                },
+	                statusCode: {
+	                      302: function() { 
+	                          toastr.success('Hết phiên đăng nhập');
+	                          window.location.reload()
+	                      },
+	                      400: function() { 
+	                          toastr.error('Hãy thử lại sau', 'Có lỗi xảy ra!'); 
+	                      },
+	                      200: function() { 
+	                          toastr.success('Hãy kiểm tra lại ở trong hồ sơ cá nhân','Bỏ theo dõi câu hỏi thành công')
+	                          window.location.reload()
+	                      },
+	                },
+	                complete: function() {
+	                    self.disabled = false;
+	                }
+	            });
+	        })
+	    }else{
+	        $.ajax({
+	            contentType:'application/json; charset=utf-8',
+	            type: 'POST',
+	            url:"/questions/follow?"+ $.param({"id":questionId}),
+	            beforeSend:function(){
+	                self.disabled = true;
+	            },
+	            statusCode: {
+	                  302: function() { 
+	                      toastr.success('Hết phiên đăng nhập');
+	                      window.location.reload()
+	                  },
+	                  400: function() { 
+	                      toastr.error('Hãy thử lại sau', 'Có lỗi xảy ra!'); 
+	                  },
+	                  200: function() { 
+	                      toastr.success('Hãy kiểm tra lại ở trong hồ sơ cá nhân','Theo dõi câu hỏi thành công')
+	                      window.location.reload()
+	                  },
+	            },
+	            complete: function() {
+	                self.disabled = false;
+	            }
+	        });
+	    }   
 	});
 	
 	$(".answer-tick").click(function(){
-		$("#tick").modal()
+		$("#tick-answer-modal").modal()
 		var answerId = $(this).attr("id")
 		$("#btnTick").attr("data-answer",answerId);
 	})
@@ -86,13 +117,13 @@ $(document).ready(function() {
 					  toastr.error('Hãy thử lại sau', 'Có lỗi xảy ra!'); 
 				  },
 				  200: function() { 
-					  toastr.success('Hãy kiểm tra lại ở trong hồ sơ cá nhân','Chọn câu trả lời đúng thành cun')
+					  toastr.success('Câu trả lời bạn vừa chọn đã được đưa lên đầu tiên','Chọn câu trả lời đúng thành công')
 					  window.location.reload()
 				  },
 			},
 			complete: function() {
 				self.disabled = false;
-				$("#tick").modal('hide')
+				$("#tick-answer-modal").modal('hide')
 			}
 		});
 	})

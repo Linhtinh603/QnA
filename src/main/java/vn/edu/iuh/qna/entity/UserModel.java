@@ -31,7 +31,7 @@ public class UserModel {
 	private Date birthday;
 	private String jobPosition;
 	@DBRef
-	@JsonIgnore
+	@JsonIgnore	
 	private List<QuestionModel> followingQuestions;
 	private boolean status;
 	private String role;

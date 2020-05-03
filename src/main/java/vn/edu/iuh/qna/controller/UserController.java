@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -136,8 +137,6 @@ public class UserController {
 		
 		question.get().setView(question.get().getView() + 1);
 		questionService.save(question.get());
-//		userDetail.getUser().setFollowingQuestions(new ArrayList<QuestionModel>());
-//		userService.save(userDetail.getUser());
 		boolean following = false;	
 		for(QuestionModel followingQuestion : userDetail.getUser().getFollowingQuestions()) {
 			if(followingQuestion.getId().equals(id)) {
@@ -227,6 +226,24 @@ public class UserController {
 		Optional<QuestionModel> question = questionService.finById(id);		
 		user.getFollowingQuestions().add(question.get());
 		userService.save(user);
+		question.get().setFollower(question.get().getFollower()+1);
+		questionService.save(question.get());
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/questions/unfollow")
+	public ResponseEntity<String> unfollowQuestion(@RequestParam String id ,Authentication authentication){
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+		}
+		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
+		UserModel user = userDetail.getUser();
+		Optional<QuestionModel> question = questionService.finById(id);		
+		user.getFollowingQuestions().remove(question.get());
+		userService.save(user);
+		question.get().setFollower(question.get().getFollower()-1);
+		questionService.save(question.get());
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
@@ -266,13 +283,32 @@ public class UserController {
 	}
 
 	@GetMapping({ "/my_profile", "/my_profile/posted_questions" })
-	public String postedQuestion() {
+	public String postedQuestion(Model model, Authentication authentication,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "5") int size) {
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return "redirect:/";
+		}
+		UserDetailReqDto author = (UserDetailReqDto) principal;
+		Page<QuestionModel> postedQuesstions = questionService.findByAuthor(author.getUser(), PageRequest.of(page - 1, size));
+		model.addAttribute("postedQuestions", postedQuesstions);
 		return "user/posted_questions";
 	}
 
 	@GetMapping("/my_profile/star_questions")
-	public String starQuestion() {
-
+	public String starQuestion(Model model, Authentication authentication,
+			@RequestParam(required = false, defaultValue = "1") int page,
+			@RequestParam(required = false, defaultValue = "5") int size) {
+		
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return "redirect:/";
+		}
+		UserDetailReqDto user = (UserDetailReqDto) principal;
+		Page<QuestionModel> followingQuestions = new PageImpl<QuestionModel>(user.getUser().getFollowingQuestions());
+		
+		model.addAttribute("followingQuestions", followingQuestions);
 		return "user/star_questions";
 	}
 

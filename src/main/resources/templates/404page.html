@@ -1,13 +1,29 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="_head(pageTitle='Đăng nhập')">
+<head th:replace="_head(pageTitle='404 - Page not found')">
 </head>
 
 <body>
 
-	<div class="container mt-5">
-		<h1>Trang truy cập không tồn tại</h1>
-	</div>
+	<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="error-template">
+                <h1>
+                    Oops!</h1>
+                <h2>
+                    404 Not Found</h2>
+                <div class="error-details">
+                    Xin lỗi, chúng tôi không tìm thấy trang mà bạn đang yêu cầu truy cập!
+                </div>
+                <div class="error-actions p-3">
+                    <a href="/" class="btn btn-primary btn-md"><span class="glyphicon glyphicon-home"></span>
+                        Về trang chủ </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 

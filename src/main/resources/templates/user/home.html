@@ -15,15 +15,15 @@
 					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.rightAnswerId != ''} ? 'border border-success'"
 					th:href="@{'/questions/'+${question.id}}">
 					<div class="col-1 px-0 text-center" th:classappend="${question.rightAnswerId != ''} ? 'text-success'">
-						<span
+						<span class="font-weight-bold"
 							th:text="${#lists.isEmpty(question.answers)?'0':#lists.size(question.answers)}"></span><br>Câu
 						trả lời
 					</div>
 					<div class="col-1 px-0 text-center">
-						<span th:text="${question.follower}"></span><br><span>Quan tâm</span>
+						<span class="font-weight-bold" th:text="${question.follower}"></span><br><span>Quan tâm</span>
 					</div>
 					<div class="col-1 px-0 text-center">
-						<span th:text="${question.view} "></span><br><span>Lượt xem</span>
+						<span class="font-weight-bold" th:text="${question.view} "></span><br><span>Lượt xem</span>
 					</div>
 					<div class="col-9">
 						<div class="row">

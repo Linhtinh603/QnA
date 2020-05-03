@@ -33,7 +33,7 @@ function onMessageReceived(payload){
 						<td class="align-middle text-secondary" data-toggle="tooltip"
 							data-placement="top"
 							title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
-							<i class="fas fa-check fa-3x"></i>
+							<i class="fas fa-check fa-3x answer-tick" data-toggle="modal" th:id="${answer.id}"
 						</td>
 						<td>${answer.content}.</td>
 					</tr>
@@ -42,8 +42,8 @@ function onMessageReceived(payload){
 						<td>
 							<div>
 								<a th:href="@{/profile/{id}(id=${answer.author.userName})}"
-									class="font-italic m-1 text-info"> ${answer.author.fullName} </a> 
-								<span class="font-italic text-info"> đã hỏi lúc ${answer.createTime}</span>
+									class="font-italic m-1 text-info"> ${answer.author.fullName}</a> 
+								<span class="font-italic text-info">đã trả lời lúc ${answer.createTime}</span>
 							</div>
 						</td>
 					</tr>
@@ -60,7 +60,7 @@ function onMessageReceived(payload){
 							<div>
 								<a th:href="@{/profile/{id}(id=${answer.author.userName})}"
 									class="font-italic m-1 text-info"> ${answer.author.fullName} </a> 
-								<span class="font-italic text-info"> đã hỏi lúc ${answer.createTime}</span>
+								<span class="font-italic text-info">đã trả lời lúc ${answer.createTime}</span>
 							</div>
 						</td>
 					</tr>

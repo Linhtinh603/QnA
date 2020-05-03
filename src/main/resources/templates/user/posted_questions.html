@@ -1,4 +1,7 @@
-<div xmlns:th="http://www.thymeleaf.org" th:replace="user\_layout :: base(content=~{::section})">
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="user\_layout :: base(content=~{::section},scripts=~{::script})">
+	<script th:src="@{/static/js/user.myQuestion.js}" defer></script>
+	
 	<section class="container-fluid">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
@@ -16,59 +19,90 @@
 			</div>
 			<div class="col">
 				<div class="d-none"> Không có câu hỏi đã theo dõi tronh danh sách</div>
-				<table class="table table-bordered table-hover">
-					<thead><th>STT</th><th>Câu hỏi</th><th>Số câu trả lời</th><th>Đã có câu trả lời giải quyết</th><th>Thời gian đăng</th></thead>
-					<tbody >
-						<tr>						
-								<td>1</td>
-								<td><a href="#" >Làm sao để cập nhật phần mềm diệt virus</a></td>
-								<td>15</td>
-								<td class="text-danger">Chưa có</td>
-								<td>24-5-2020 21h20</td>							
-						</tr>	
-						<tr>
-							<td>2</td>
-							<td><a href="#">Tôi muốn hỗ trợ từ phía IT để cài lại windows thì làm sao?</a></td>
-							<td>5</td>
-							<td class="text-success">Đã có</td>
-							<td>24-5-2020 21h20</td>			
-						</tr>
+				<span class="text-success font-weight-italic"> <i class="far fa-check-square"></i>: Là đã có câu trả lời đúng</span>
+				<table class="table table-striped table-bordered table-hover">
+					<thead>
+					<tr>
+						<th>STT</th><th scope="col">Tiêu đề</th><th>Lượt trả lời</th><th>Lượt xem</th>
+						<th>Lượt quan tâm</th><th>Ngày đăng</th><th>Chức năng</th>
+					</tr>
+					</thead>
+					<tbody>
+						<tr th:each="postedQuestion : ${postedQuestions}">						
+								<th scope="row" th:text="${postedQuestionStat.count}">STT</th>
+								<td scope="row"><a th:href="@{/questions/{id}(id=${postedQuestion.id})}" 
+									th:text="${postedQuestion.title}">Tieu de</a></td>
+								<td th:classAppend="${postedQuestion.rightAnswerId != ''? 'text-success':''}"> 
+								<span th:text="${#lists.size(postedQuestion.answers)}">answers </span>
+									<i th:if="${postedQuestion.rightAnswerId != ''}" class="far fa-check-square"></i>
+								</td>
+								<td th:text="${postedQuestion.view}">view</td>
+								<td th:text="${postedQuestion.follower}">follower</td>
+								<td th:text="${#dates.format(postedQuestion.createTime,'dd-MMM-YYY hh:MM:ss')}">ngay dang</td>	
+								<td>
+									<a th:href="@{/questions/edit/{id}(id=${postedQuestion.id})}">
+										<i th:text="Sửa" class="fas fa-edit mr-3 text-info"></i></a>
+									<a class="delete-button"  th:id="${postedQuestion.id}" data-toggle="modal" data-target="#deleteModal" >
+										<i th:text="Xóa" class="fas fa-trash-alt text-danger"></i></a>
+								</td>			
+						</tr>							
 					</tbody>
 				</table>
-
-				<!-- <nav class="mt-5" aria-label="Pagination" th:if="${questions.totalPages gt 0}">
+<!-- Modal Delete -->
+		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+		  <div class="modal-dialog modal-dialog-centered" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title text-danger" id="exampleModalLongTitle">Xác nhận </h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Bạn có chắc xóa câu hỏi này ra khỏi hệ thống không?</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-success" data-dismiss="modal">Không</button>
+		        <button id="btnDelete" type="button" class="btn btn-danger">Đồng ý</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+				 <nav class="mt-5" aria-label="Pagination" th:if="${postedQuestions.totalPages gt 0}">
 					<ul class="pagination justify-content-center font-weight-medium">
 						<li class="page-item"
-							th:classappend="${questions.number eq 0} ? 'disabled'"><a
+							th:classappend="${postedQuestions.number eq 0} ? 'disabled'"><a
 							class="page-link svg-icon"
-							th:href="@{/(page=${questions.number lt 2 ? 1 : questions.number})}"
+							th:href="@{/my_profile/(page=${postedQuestions.number lt 2 ? 1 : postedQuestions.number})}"
 							aria-label="Previous" title="Previous Page" rel="tooltip"> <span
 								aria-hidden="true" data-feather="chevrons-left" width="20"
 								height="20">Trang trước</span>
 						</a></li>
 						<li class="page-item"
-							th:classappend="${i eq questions.number + 1} ? 'active'"
-							th:each="i : ${#numbers.sequence( questions.number + 1, questions.totalPages > 10 + questions.number ? questions.number + 10 : questions.totalPages, 1)}">
+							th:classappend="${i eq postedQuestions.number + 1} ? 'active'"
+							th:each="i : ${#numbers.sequence( postedQuestions.number + 1, 
+							postedQuestions.totalPages > 10 + postedQuestions.number ? postedQuestions.number + 10 : 
+								postedQuestions.totalPages, 1)}">
 							<a class="page-link"
-							th:href="@{/(page=${i})}" th:text="${i}"
+							th:href="@{/my_profile/(page=${i})}" th:text="${i}"
 							th:title="${'Page '+ i}" rel="tooltip"></a>
 						</li>
 						<li class="page-item disabled"
-							th:if="${questions.number + 10 < questions.totalPages}"><a
+							th:if="${postedQuestions.number + 10 < postedQuestions.totalPages}"><a
 							class="page-link svg-icon" href="#"> <span
 								data-feather="more-horizontal" width="20" height="20"></span>
 						</a></li>
 						<li class="page-item"
-							th:classappend="${questions.number + 1 eq questions.totalPages} ? 'disabled'">
+							th:classappend="${postedQuestions.number + 1 eq postedQuestions.totalPages} ? 'disabled'">
 							<a class="page-link svg-icon"
-							th:href="@{/(page=${questions.number + 2})}"
+							th:href="@{/my_profile/(page=${postedQuestions.number + 2})}"
 							aria-label="Next" title="Next Page" rel="tooltip"> <span
 								aria-hidden="true" data-feather="chevrons-right" width="20"
 								height="20">Trang kế tiếp</span>
 						</a>
 						</li>
 					</ul>
-				</nav> -->
+				</nav> 
 			</div>
 		</div>
 	</section>
