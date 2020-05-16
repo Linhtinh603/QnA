@@ -13,6 +13,6 @@ import vn.edu.iuh.qna.entity.UserModel;
 public interface QuestionRepository extends MongoRepository<QuestionModel, String> {
 	Page<QuestionModel> findByIsDeletedFalse(Pageable pageable);
 	Page<QuestionModel> findByCategoryAndIsDeletedFalse(CategoryModel category,Pageable pageable);
-	Page<QuestionModel> findByTitleNormalizedContaining(String titleNormalized,Pageable pageable);
+	Page<QuestionModel> findByTitleNormalizedContainingAndIsDeletedFalse(String titleNormalized,Pageable pageable);
 	Page<QuestionModel> findByAuthorAndIsDeletedFalse(UserModel author, Pageable pageable);
 }

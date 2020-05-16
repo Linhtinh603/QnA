@@ -46,7 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public Page<QuestionModel> findByTitleNormalizedContaining(String titleNormalized, Pageable pageable) {
-		return questionRepository.findByTitleNormalizedContaining(titleNormalized, pageable);
+		return questionRepository.findByTitleNormalizedContainingAndIsDeletedFalse(titleNormalized, pageable);
 	}
 
 	@Override
