@@ -31,7 +31,7 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public Page<QuestionModel> findAll(Pageable pageable) {
-		return questionRepository.findAll(pageable);
+		return questionRepository.findByIsDeletedFalse(pageable);
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public Page<QuestionModel> findByCategory(CategoryModel category, Pageable pageable) {
-		return questionRepository.findByCategory(category, pageable);
+		return questionRepository.findByCategoryAndIsDeletedFalse(category, pageable);
 	}
 
 	@Override

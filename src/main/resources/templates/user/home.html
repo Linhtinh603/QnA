@@ -11,7 +11,7 @@
 				</nav>
 			</div>
 			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
-				<a th:each="question : ${questions}" th:if="${!question.deleted}"
+				<a th:each="question : ${questions}"
 					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.rightAnswerId != ''} ? 'border border-success'"
 					th:href="@{'/questions/'+${question.id}}">
 					<div class="col-1 px-0 text-center" th:classappend="${question.rightAnswerId != ''} ? 'text-success'">
