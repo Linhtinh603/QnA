@@ -147,7 +147,7 @@ public class AdminController {
 				}
 				userModel.setFullName(user.getFullName());
 				userModel.setJobPosition(user.getJobPosition());
-				userModel.setUserName(user.getUserName());
+				// userModel.setUserName(user.getUserName());
 				userService.save(userModel);
 				return "redirect:/admin/manage_accounts";
 			}

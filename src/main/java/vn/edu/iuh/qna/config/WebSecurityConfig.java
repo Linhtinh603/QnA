@@ -2,6 +2,8 @@ package vn.edu.iuh.qna.config;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +19,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -25,6 +26,8 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import vn.edu.iuh.qna.service.impl.UserDetailsServiceImpl;
 
 @Configuration
@@ -33,6 +36,13 @@ import vn.edu.iuh.qna.service.impl.UserDetailsServiceImpl;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	public static final Map<String, RoleConfig> ROLE_CONFIG = new HashMap<String, RoleConfig>() {
+		private static final long serialVersionUID = 1L;
+		{
+			put(ROLE_USER, RoleConfig.of(ROLE_USER, "/"));
+			put(ROLE_ADMIN, RoleConfig.of(ROLE_ADMIN, "/admin"));
+		}
+	};
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
@@ -54,19 +64,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf().disable();
 
 		// Các trang không yêu cầu login
-		http.authorizeRequests().antMatchers("/login", "/logout").anonymous();
+		http.authorizeRequests().antMatchers("/login*", "/logout*").permitAll();
 
 		// Trang /userInfo yêu cầu phải login với vai trò ROLE_USER hoặc ROLE_ADMIN.
 		// Nếu chưa login, nó sẽ redirect tới trang /login.
 		// http.authorizeRequests().antMatchers("/userInfo").access("hasAnyRole('ROLE_USER',
 		// 'ROLE_ADMIN')");
-
 		// Trang chỉ dành cho ADMIN
 		// http.authorizeRequests().antMatchers("/admin").access("hasRole('ROLE_ADMIN')");
 
 		// Khi người dùng đã login, với vai trò XX.
 		// Nhưng truy cập vào trang yêu cầu vai trò YY,
 		// Ngoại lệ AccessDeniedException sẽ ném ra.
+		// AuthenticationEntryPoint authenticationEntryPoint = new
+		// AuthenticationEntryPoint() {
+
+		// @Override
+		// public void commence(HttpServletRequest request, HttpServletResponse
+		// response,
+		// AuthenticationException authException) throws IOException, ServletException {
+		// log.debug("dmmm");
+		// }
+		// };
+		// http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
 		http.authorizeRequests().and().exceptionHandling().accessDeniedHandler(authDeniedHandler());
 
 		// Cấu hình cho Login Form.
@@ -83,8 +103,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// Cấu hình Remember Me.
 		http.authorizeRequests().and() //
-				.rememberMe().tokenRepository(this.persistentTokenRepository()) //
-				.tokenValiditySeconds((int) TimeUnit.SECONDS.convert(24, TimeUnit.HOURS)); // 24h
+				.rememberMe().tokenRepository(persistentTokenRepository()) //// 24h
+				.tokenValiditySeconds((int) TimeUnit.SECONDS.convert(24, TimeUnit.HOURS));
+				//.authenticationSuccessHandler(authSucessHandler()); 
 
 	}
 
@@ -114,19 +135,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			return;
 		}
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth == null) {
-			return;
-		}
 		try {
+			if (auth == null) {
+				response.sendRedirect("/login");
+			}
 			Collection<? extends GrantedAuthority> authors = auth.getAuthorities();
-			if (authors.contains(new SimpleGrantedAuthority(ROLE_ADMIN))) {
-				response.sendRedirect("/admin");
-			} else {
-				response.sendRedirect("/");
+			GrantedAuthority author = authors.iterator().next();
+			RoleConfig roleConfig = ROLE_CONFIG.get(author.getAuthority());
+			if (roleConfig != null) {
+				response.sendRedirect(roleConfig.getPath());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Data
+	@AllArgsConstructor(staticName = "of")
+	public static class RoleConfig {
+		private String role;
+		private String path;
 	}
 
 }

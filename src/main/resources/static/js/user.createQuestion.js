@@ -95,7 +95,10 @@ $(document).ready(function() {
 				  },
 				  201: function() { 
 					  toastr.success('Đăng câu hỏi thành công')
-					   window.location = '/my_profile'
+					  setTimeout(function () {
+						  window.location = '/my_profile'
+					  }, 1000)
+					  
 				  },
 				  400: function() { toastr.error('Hãy thử lại sau', 'Có lỗi xảy ra!'); }
 			},
