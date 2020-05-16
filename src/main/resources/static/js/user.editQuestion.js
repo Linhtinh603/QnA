@@ -103,8 +103,10 @@ $(document).ready(function() {
 					  window.location.reload()
 				  },
 				  201: function() { 
-					  toastr.success('Đăng câu hỏi thành công')
-					   window.location = '/my_profile'
+					  toastr.success('Chỉnh sửa câu hỏi thành công')
+					  setTimeout(function () {
+						  window.location = `/questions/${id}`
+					  }, 1000)   
 				  },
 				  400: function() { toastr.error('Hãy thử lại sau', 'Có lỗi xảy ra!'); }
 			},

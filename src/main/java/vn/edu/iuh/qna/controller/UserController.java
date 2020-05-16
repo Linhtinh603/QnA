@@ -189,6 +189,7 @@ public class UserController {
 		if (!originQuestion.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+		originQuestion.get().setTitle(question.getTitle());
 		originQuestion.get().setTitleNormalized(StringUtils.normalize(question.getTitle()));
 		originQuestion.get().setUpdateTime(new Date());
 		originQuestion.get().setCategory(question.getCategory());
@@ -223,11 +224,13 @@ public class UserController {
 		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		UserModel user = userDetail.getUser();
-		Optional<QuestionModel> question = questionService.finById(id);		
-		user.getFollowingQuestions().add(question.get());
-		userService.save(user);
-		question.get().setFollower(question.get().getFollower()+1);
-		questionService.save(question.get());
+		Optional<QuestionModel> question = questionService.finById(id);
+		if(!user.getFollowingQuestions().contains(question.get()))	{
+			user.getFollowingQuestions().add(question.get());
+			userService.save(user);
+			question.get().setFollower(question.get().getFollower()+1);
+			questionService.save(question.get());
+		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
@@ -240,10 +243,11 @@ public class UserController {
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		UserModel user = userDetail.getUser();
 		Optional<QuestionModel> question = questionService.finById(id);		
-		user.getFollowingQuestions().remove(question.get());
-		userService.save(user);
-		question.get().setFollower(question.get().getFollower()-1);
-		questionService.save(question.get());
+		if(user.getFollowingQuestions().remove(question.get())){
+			userService.save(user);
+			question.get().setFollower(Math.max(question.get().getFollower()-1,0));
+			questionService.save(question.get());
+		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
