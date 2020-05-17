@@ -197,6 +197,7 @@ public class UserController {
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
 	
+	@ResponseBody
 	@DeleteMapping("/questions/delete")
 	public ResponseEntity<String> deleteQuestion(@RequestParam String id ,Authentication authentication){
 		Object principal = authentication.getPrincipal();
@@ -215,6 +216,7 @@ public class UserController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
+	@ResponseBody
 	@PostMapping("/questions/follow")
 	public ResponseEntity<String> followQuestion(@RequestParam String id ,Authentication authentication){
 		Object principal = authentication.getPrincipal();
@@ -231,6 +233,7 @@ public class UserController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
+	@ResponseBody
 	@PostMapping("/questions/unfollow")
 	public ResponseEntity<String> unfollowQuestion(@RequestParam String id ,Authentication authentication){
 		Object principal = authentication.getPrincipal();
@@ -265,21 +268,36 @@ public class UserController {
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	
-	@GetMapping("/questions/{id}/cancle-right-answer")
-	public String cancleRightAnswer(@PathVariable String id, Authentication authentication){
+	@ResponseBody
+	@PutMapping("/questions/{id}/cancle-right-answer")
+	public ResponseEntity<String> cancleRightAnswer(@PathVariable String id, Authentication authentication){
 		Object principal = authentication.getPrincipal();
 		if (!(principal instanceof UserDetailReqDto)) {
-			return "redirect:/";
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		Optional<QuestionModel> question = questionService.finById(id);		
 		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
-			return "403Page";
+			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 		}
 		question.get().setRightAnswerId("");
 		questionService.save(question.get());
 		
-		return "redirect:/questions/"+id;
+		return new ResponseEntity<String>(HttpStatus.OK);
+	}
+	
+	@GetMapping({ "/profile/{username}" })
+	public String viewProfile(Model model, Authentication authentication, @PathVariable String username){
+		Object principal = authentication.getPrincipal();
+		if (!(principal instanceof UserDetailReqDto)) {
+			return "redirect:/";
+		}
+		
+		Optional<UserModel> user = userService.findByUserName(username);		
+		model.addAttribute("user", user.get());
+		List<CategoryModel> listCategory = categoryService.findAll();
+		model.addAttribute("categories", listCategory);
+		return "user/view_profile";
 	}
 
 	@GetMapping({ "/my_profile", "/my_profile/posted_questions" })
