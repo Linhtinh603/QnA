@@ -38,9 +38,9 @@
 				<!-- 			</a> -->
 				<p th:if="${questions.getTotalElements()==0}">Rất tiếc không có kết quả nào</p>
 				<a  th:each="question : ${questions}"
-					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.resolved} ? 'border border-success'"
+					class="row mb-3 shadow rounded p-3 text-decoration-none text-dark" th:classappend="${question.rightAnswerId} ? 'border border-success'"
 					th:href="@{'/questions/'+${question.id}}">
-					<div class="col-1 px-0 text-center" th:classappend="${question.resolved} ? 'text-success'">
+					<div class="col-1 px-0 text-center" th:classappend="${question.rightAnswerId} ? 'text-success'">
 						<span
 							th:text="${#lists.isEmpty(question.answers)?'0':#lists.size(question.answers)}"></span><br>câu trả lời
 					</div>

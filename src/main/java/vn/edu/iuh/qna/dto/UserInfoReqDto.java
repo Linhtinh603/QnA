@@ -27,7 +27,7 @@ public class UserInfoReqDto {
 	private String password;
 	@NotNull(message = "Xác nhận mật khẩu không khớp")
 	private String confirmPassword;
-	@NotBlank(message = "Tên tài khoản bị trống")
+	// @NotBlank(message = "Tên tài khoản bị trống")
 	private String userName;
 
 	public String getPassword() {
