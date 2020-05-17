@@ -5,8 +5,8 @@
 	<section class="container-fluid">
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="#">Home</a></li>
-				<li class="breadcrumb-item"><a href="#">Trang cá nhân</a></li>
+				<li class="breadcrumb-item"><a th:href="@{/}">Trang chủ</a></li>
+				<li class="breadcrumb-item"><a th:href="@{/my_profile}">Trang cá nhân</a></li>
 				<li class="breadcrumb-item active" aria-current="page">Câu hỏi của tôi</li>
 			</ol>
 		</nav>
@@ -41,9 +41,8 @@
 								<td th:text="${#dates.format(postedQuestion.createTime,'dd-MMM-YYY hh:MM:ss')}">ngay dang</td>	
 								<td>
 									<a th:href="@{/questions/edit/{id}(id=${postedQuestion.id})}">
-										<i th:text="Sửa" class="fas fa-edit mr-3 text-info"></i></a>
-									<a class="delete-button"  th:id="${postedQuestion.id}" data-toggle="modal" data-target="#deleteModal" >
-										<i th:text="Xóa" class="fas fa-trash-alt text-danger"></i></a>
+										<i th:text="Sửa" class="fas fa-edit mr-3 pb-3 text-info cursor-p"></i></a>
+										<i class="delete-button cursor-p fas fa-trash-alt text-danger"  th:id="${postedQuestion.id}" data-toggle="modal" data-target="#deleteModal" th:text="Xóa"></i>
 								</td>			
 						</tr>							
 					</tbody>

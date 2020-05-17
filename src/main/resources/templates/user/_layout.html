@@ -1,6 +1,7 @@
 <!DOCTYPE>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="base(content)">
 <head th:replace="_head">
+	<link rel="stylesheet" type="text/css" href="../static/css/style.css">
 </head>
 <nav th:replace="user/_menu"></nav>
 <div th:replace="${content}"></div>
