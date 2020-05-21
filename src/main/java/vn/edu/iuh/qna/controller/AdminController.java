@@ -30,8 +30,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import vn.edu.iuh.qna.dto.UserInfoReqDto;
+import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.entity.UserModel;
+import vn.edu.iuh.qna.service.CategoryService;
 import vn.edu.iuh.qna.service.QuestionService;
 import vn.edu.iuh.qna.service.ReportService;
 import vn.edu.iuh.qna.service.ReportService.CountReportDto;
@@ -46,9 +48,10 @@ public class AdminController {
 	private UserService userService;
 	@Autowired
 	private QuestionService questionService;
-
 	@Autowired
 	private ReportService reportService;
+	@Autowired
+	private CategoryService categoryService;
 
 	@GetMapping
 	public String home(@RequestParam(required = false) String from, @RequestParam(required = false) String to,
@@ -167,6 +170,27 @@ public class AdminController {
 		} else {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@GetMapping("manage_categories")
+	public String manageCategories(Model model) {
+		List<CategoryModel> categories = categoryService.findAll();
+		model.addAttribute("categories", categories);
+		CategoryModel category = new CategoryModel();
+		model.addAttribute("category", category);
+		return "admin/manage_categories";
+	}
+
+	@PostMapping("add_category")
+	public String doAdCategory(@Valid @ModelAttribute("category") CategoryModel category, BindingResult bindingResult,
+	Model model) {
+		if(bindingResult.hasErrors()){
+			List<CategoryModel> categories = categoryService.findAll();
+			model.addAttribute("categories", categories);
+			return "admin/manage_categories";
+		}
+		categoryService.save(category);
+		return "redirect:/admin/manage_categories";
 	}
 
 	@GetMapping("manage_questions")

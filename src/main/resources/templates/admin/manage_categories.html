@@ -1,0 +1,48 @@
+<div xmlns:th="http://www.thymeleaf.org"
+	th:replace="admin\_layout :: base(content=~{::section},links=~{::link},scripts=~{::script})">
+	<script th:src="@{/static/js/admin.manageQuestion.js}" defer></script>
+	<section class="container-fluid">
+		<div class="row">
+			<div class="col-md-2 col-sm-12 mt-3">
+				<nav class="nav nav-pills flex-column ">
+					<a class="nav-item nav-link" th:href="@{/admin/}">Thống kê</a>
+					<a class="nav-item nav-link" th:href="@{/admin/manage_accounts}">Quản lý tài khoản</a>
+					<a class="nav-item nav-link active" th:href="@{/admin/manage_categories}">Quản lý thể loại</a>
+					<a class="nav-item nav-link" th:href="@{/admin/manage_questions}">Quản lý câu hỏi</a>
+				</nav>
+			</div>
+			<div class="col-md-10 col-sm-12 mt-5">
+				<div class="row">
+					<div class="col-12">
+						<form th:action="@{/admin/add_category}" th:object="${category}" method='POST'
+							class="form-inline mt-3">
+							<div class="form-group mx-sm-3 mb-2">
+								<label for="inputPassword2" class="sr-only">Tên thể loại</label>
+								<input type="text" class="form-control" id="inputPassword2"
+									placeholder="Nhập tên thể loại" th:field="*{name}" th:errorclass="is-invalid">
+								<div class="invalid-feedback" th:errors="*{name}"></div>
+							</div>
+							<button type="submit" class="btn btn-primary mb-2">Thêm</button>
+						</form>
+					</div>
+					<div class="col-12">
+						<table id="tableAdmin" class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th scope="col">STT</th>
+									<th scope="col">Tên thể loại</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="category,iter : ${categories}">
+									<th th:text="${iter.index+1}"></th>
+									<td th:text="${category.name}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</div>

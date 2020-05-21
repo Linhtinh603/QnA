@@ -1,5 +1,8 @@
 package vn.edu.iuh.qna.entity;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,6 +23,8 @@ import lombok.ToString;
 public class CategoryModel {
 	@Id
 	private String id;
+	@NotBlank(message = "Tên thể loại bị trống")
+	@Size(min = 5,max = 30,message = "Tên thể loại nằm trong khoảng {min} đến {max} kí tự")
 	private String name;
 	public CategoryModel(String name) {
 		super();

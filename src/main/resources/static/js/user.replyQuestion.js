@@ -1,9 +1,10 @@
+
 var content = ""
 function connect() {
       
     var socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
- 
+	stompClient.debug = () => {};
     stompClient.connect({}, onConnected, onError);
 }
 
@@ -33,7 +34,7 @@ function onMessageReceived(payload){
 						<td class="align-middle text-secondary" data-toggle="tooltip"
 							data-placement="top"
 							title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
-							<i class="fas fa-check fa-3x answer-tick" data-toggle="modal" th:id="${answer.id}"
+							<i class="fas fa-check fa-3x answer-tick" data-toggle="modal" id="${answer.id}"></i>
 						</td>
 						<td>${answer.content}.</td>
 					</tr>
@@ -41,7 +42,7 @@ function onMessageReceived(payload){
 						<td></td>
 						<td>
 							<div>
-								<a th:href="@{/profile/{id}(id=${answer.author.userName})}"
+								<a href="/profile/${answer.author.userName}"
 									class="font-italic m-1 text-info"> ${answer.author.fullName}</a> 
 								<span class="font-italic text-info">đã trả lời lúc ${answer.createTime}</span>
 							</div>
@@ -58,7 +59,7 @@ function onMessageReceived(payload){
 					<tr>
 						<td>
 							<div>
-								<a th:href="@{/profile/{id}(id=${answer.author.userName})}"
+								<a href="/profile/${answer.author.userName}"
 									class="font-italic m-1 text-info"> ${answer.author.fullName} </a> 
 								<span class="font-italic text-info">đã trả lời lúc ${answer.createTime}</span>
 							</div>
@@ -70,6 +71,13 @@ function onMessageReceived(payload){
 	
 	answer_list.insertAdjacentHTML("beforeend",element)
 	$("#content").val("")
+
+	$(document).off("click", ".answer-tick");
+	$(".answer-tick").click(function () {
+		$("#tick-answer-modal").modal()
+		var answerId = $(this).attr("id")
+		$("#btnTick").attr("data-answer", answerId);
+	})
 }
 
 $(document).ready(function() {

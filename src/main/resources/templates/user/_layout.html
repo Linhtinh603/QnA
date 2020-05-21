@@ -1,8 +1,14 @@
 <!DOCTYPE>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="base(content)">
+
 <head th:replace="_head">
 </head>
-<nav th:replace="user/_menu"></nav>
-<div th:replace="${content}"></div>
-<footer th:replace="_footer"></footer>
+
+<body class="d-flex flex-column">
+    <nav th:replace="user/_menu"></nav>
+    <div th:replace="${content}"></div>
+
+    <footer th:replace="_footer"></footer>
+</body>
+
 </html>

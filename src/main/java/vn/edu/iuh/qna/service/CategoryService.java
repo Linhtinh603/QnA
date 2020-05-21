@@ -9,4 +9,5 @@ import vn.edu.iuh.qna.entity.CategoryModel;
 @Service
 public interface CategoryService {
 	List<CategoryModel> findAll();
+	void save(CategoryModel category);
 }
