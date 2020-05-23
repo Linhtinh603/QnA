@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -75,7 +76,7 @@ public class UserController {
 	@GetMapping("/search")
 	public String search(Model model, @RequestParam(required = false, name = "key") String key,
 			@RequestParam(required = false, defaultValue = "1") int page,
-			@RequestParam(required = false, defaultValue = "2") int size) {
+			@RequestParam(required = false, defaultValue = "5") int size) {
 		if (key == null || key.trim().equals("")) {
 			return "redirect:/";
 		}
@@ -328,7 +329,9 @@ public class UserController {
 			return "redirect:/";
 		}
 		UserDetailReqDto user = (UserDetailReqDto) principal;
-		Page<QuestionModel> followingQuestions = new PageImpl<QuestionModel>(user.getUser().getFollowingQuestions());
+		List<QuestionModel> followQuestionList = user.getUser().getFollowingQuestions()
+				.stream().filter(f -> !f.isDeleted()).collect(Collectors.toList());
+		Page<QuestionModel> followingQuestions = new PageImpl<QuestionModel>(followQuestionList);
 		
 		model.addAttribute("followingQuestions", followingQuestions);
 		return "user/star_questions";
