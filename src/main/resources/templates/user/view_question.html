@@ -7,8 +7,8 @@
 			var userId = [[${userId}]]
 			var owner = true
 	</script>
-	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
+	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<!-- https://cdnjs.com/libraries/sockjs-client -->
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
@@ -16,17 +16,9 @@
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-	<section class="container-fluid">
+	<section class="container">
 		<div class="row">
-			<div class="col-md-2 col-sm-12 mt-3">
-				<nav class="nav nav-pills flex-column ">
-					<a class="nav-item nav-link" th:classappend="${categoryId == null} ? 'active'" th:href="@{/}">Tất cả</a> 
-					<a	th:each="category : ${categories}" class="nav-item nav-link"
-						th:text="${category.name}" th:classappend="${category.id == categoryId} ? 'active'"
-						th:href="@{/(category=${category.id})}"></a>
-				</nav>
-			</div>
-			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
+			<div class="col-12">
 				<h4 th:text="${question.title}">Title</h4>
 				<div class="row border-bottom border-dark">
 					<a th:text="${question.category.name}"

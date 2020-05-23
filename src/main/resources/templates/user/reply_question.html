@@ -17,17 +17,9 @@
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
    
-	<section class="container-fluid">
+	<section class="container">
 		<div class="row">
-			<div class="col-md-2 col-sm-12 mt-3">
-				<nav class="nav nav-pills flex-column ">
-					<a class="nav-item nav-link" th:classappend="${categoryId == null} ? 'active'" th:href="@{/}">Tất cả</a> 
-					<a	th:each="category : ${categories}" class="nav-item nav-link"
-						th:text="${category.name}" th:classappend="${category.id == categoryId} ? 'active'"
-						th:href="@{/(category=${category.id})}"></a>
-				</nav>
-			</div>
-			<div class="col-md-10 col-sm-12 mt-5 px-md-5">
+			<div class="col-12">
 				<h4> <span th:text="${question.title}"></span> <i id="btnFollow" class="align-middle cursor-p" data-toggle="tooltip" data-placement="top" title="Quan tâm theo dõi câu hỏi này"
 				th:classappend="${following} ? 'fas fa-star text-warning' : 'far fa-star text-success'"></i> 
 				</h4> 
