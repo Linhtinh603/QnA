@@ -25,7 +25,7 @@
 						<th>Lượt xem</th><th>Lượt quan tâm</th><th>Ngày đăng</th><th>Chức năng</th>
 					</tr>
 					<tr>
-					<td colspan="8" th:class="${#lists.isEmpty(postedQuestions)} ? d-none : 'text-danger' "> Không có câu hỏi đã đăng trong danh sách</td>
+					<td colspan="8" th:class="${#lists.isEmpty(postedQuestions)} ? 'text-danger' :'d-none' "> Không có câu hỏi đã đăng trong danh sách</td>
 					</tr>
 					</thead>
 					<tbody>

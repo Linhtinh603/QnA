@@ -21,11 +21,11 @@
 				<table id="tableAdmin" class="table table-striped table-bordered table-hover">
 					<thead>
 					<tr>
-						<th>STT</th><th scope="col">Tiêu đề</th><th>Danh mục</th><th>Lượt trả lời</th>
+						<th>STT</th><th scope="col">Tiêu đề</th><th>Lượt trả lời</th>
 						<th>Lượt xem</th><th>Lượt quan tâm</th><th>Ngày đăng</th>
 					</tr>
 					<tr>
-					<td colspan="8" th:class="${#lists.isEmpty(followingQuestions)} ? d-none : 'text-danger' "> Không có câu hỏi theo dõi trong danh sách</td>
+					<td colspan="8" th:class="${#lists.isEmpty(followingQuestions)} ? 'text-danger' : 'd-none' "> Không có câu hỏi theo dõi trong danh sách</td>
 					</tr>
 					</thead>
 					<tbody>
