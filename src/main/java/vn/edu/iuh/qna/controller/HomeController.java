@@ -5,6 +5,10 @@ import static vn.edu.iuh.qna.config.WebSecurityConfig.ROLE_CONFIG;
 import java.security.Principal;
 import java.util.Collection;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,14 +23,23 @@ import vn.edu.iuh.qna.utils.WebUtils;
 public class HomeController {
 	// @Secured("ROLE_ANONYMOUS")
 	@GetMapping("/login")
-	public String login(Model model, Principal principal) {
-		if(principal!=null){
-			Authentication auth =(Authentication) principal;
+	public String login(Model model, Principal principal, HttpSession session) {
+		if (session != null) {
+			Object error = session.getAttribute("SPRING_SECURITY_LAST_EXCEPTION");
+			if (error instanceof LockedException) {
+				model.addAttribute("locked", true);
+				model.addAttribute("error", true);
+			} else if (error instanceof BadCredentialsException) {
+				model.addAttribute("error", true);
+			}
+		}
+		if (principal != null) {
+			Authentication auth = (Authentication) principal;
 			Collection<? extends GrantedAuthority> authors = auth.getAuthorities();
 			GrantedAuthority author = authors.iterator().next();
 			RoleConfig roleConfig = ROLE_CONFIG.get(author.getAuthority());
 			if (roleConfig != null) {
-				return "redirect:"+roleConfig.getPath();
+				return "redirect:" + roleConfig.getPath();
 			}
 		}
 		return "login";

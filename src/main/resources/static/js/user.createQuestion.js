@@ -68,12 +68,21 @@ $(document).ready(function() {
 			toastr.error('Tiêu đề quá ngắn(phải từ 10 ký tự)', 'Có lỗi xảy ra!');
 			return;
 		}
+		
+		if (title.length>100) {
+			toastr.error('Tiêu đề quá dài(phải nhỏ hơn 100 ký tự)', 'Có lỗi xảy ra!');
+			return;
+		}
 		if (!category) {
 			toastr.error('Thể loại bị trống(hãy chọn thể loại)', 'Có lỗi xảy ra!');
 			return;
 		}
 		if (length < 30+1) {
 			toastr.error('Nội dung quá ngắn(phải từ 30 ký tự)', 'Có lỗi xảy ra!');
+			return;
+		}
+		if (length > 2000+1) {
+			toastr.error('Nội dung quá dài(phải nhỏ hơn 2000 ký tự)', 'Có lỗi xảy ra!');
 			return;
 		}
 		$.ajax({

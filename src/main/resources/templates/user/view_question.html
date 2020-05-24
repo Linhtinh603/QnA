@@ -22,7 +22,7 @@
 				<h4 th:text="${question.title}">Title</h4>
 				<div class="row border-bottom border-dark">
 					<a th:text="${question.category.name}"
-						th:href="@{search(category=${question.category.id})}"
+						th:href="@{/(category=${question.category.id})}"
 						class="col-auto">Category</a>
 					<div th:text="${question.view} + ' lượt xem'"
 						class="col-auto font-italic text-warning">124 Lượt xem</div>

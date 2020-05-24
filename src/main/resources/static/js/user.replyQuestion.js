@@ -71,6 +71,7 @@ function onMessageReceived(payload){
 	
 	answer_list.insertAdjacentHTML("beforeend",element)
 	$("#content").val("")
+	$("#noAnswerLable").remove()
 
 	$(document).off("click", ".answer-tick");
 	$(".answer-tick").click(function () {
@@ -95,5 +96,8 @@ $(document).ready(function() {
 			return;
 		}
 		sendMessage();
+	})
+	$("#btnCancle").click(function() {
+		content = $("#content").val("")
 	})
 });

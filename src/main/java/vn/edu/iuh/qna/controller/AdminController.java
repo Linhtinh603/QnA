@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,6 @@ import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.service.CategoryService;
 import vn.edu.iuh.qna.service.QuestionService;
 import vn.edu.iuh.qna.service.ReportService;
-import vn.edu.iuh.qna.service.ReportService.CountReportDto;
 import vn.edu.iuh.qna.service.UserService;
 import vn.edu.iuh.qna.utils.EncrytedPasswordUtils;
 
@@ -71,11 +69,11 @@ public class AdminController {
 			cal.add(Calendar.MONTH, -1);
 			fromDate = cal.getTime();
 		}
-
-		Map<String, List<CountReportDto>> report = reportService.queryAdminReport(fromDate, toDate);
-		model.addAttribute("report", report);
 		model.addAttribute("from", fromDate);
 		model.addAttribute("to", toDate);
+		model.addAttribute("reportHaveAnswer", reportService.reportByQuestionHaveAnswer(fromDate, toDate));
+		model.addAttribute("reportByCategory", reportService.reportByCategory(fromDate, toDate));
+		model.addAttribute("reportByStatus", reportService.reportByStatus(fromDate, toDate));
 		return "admin/report";
 	}
 
@@ -183,8 +181,8 @@ public class AdminController {
 
 	@PostMapping("add_category")
 	public String doAdCategory(@Valid @ModelAttribute("category") CategoryModel category, BindingResult bindingResult,
-	Model model) {
-		if(bindingResult.hasErrors()){
+			Model model) {
+		if (bindingResult.hasErrors()) {
 			List<CategoryModel> categories = categoryService.findAll();
 			model.addAttribute("categories", categories);
 			return "admin/manage_categories";
@@ -195,7 +193,8 @@ public class AdminController {
 
 	@GetMapping("manage_questions")
 	public String manageQuestions(Model model) {
-		List<QuestionModel> questions = questionService.findAll().stream().filter(q -> !q.isDeleted()).collect(Collectors.toList());
+		List<QuestionModel> questions = questionService.findAll().stream().filter(q -> !q.isDeleted())
+				.collect(Collectors.toList());
 		model.addAttribute("questions", questions);
 		return "admin/manage_question";
 	}

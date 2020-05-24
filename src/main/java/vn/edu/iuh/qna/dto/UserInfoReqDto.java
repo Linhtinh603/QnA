@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +16,7 @@ import vn.edu.iuh.qna.validator.BirthdayContraint;
 public class UserInfoReqDto {
 	private String id;
 	@NotBlank(message = "Họ và tên bị trống")
+	@Size(min = 6,max = 30,message = "Tên nằm trong khoảng {min} đến {max} kí tự")
 	private String fullName;
 	@NotNull(message = "Ngày sinh bị trống")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -22,12 +24,15 @@ public class UserInfoReqDto {
 	@BirthdayContraint
 	private Date birthday;
 	@NotBlank(message = "Vị trí công việc bị trống")
+	@Size(min = 3,max = 30,message = "Vị trí công việc trong khoảng {min} đến {max} kí tự")
 	private String jobPosition;
 	@NotBlank(message = "Mật khẩu bị trống")
+	@Size(min = 3,max = 100,message = "Mật khẩu nằm trong khoảng {min} đến {max} kí tự")
 	private String password;
 	@NotNull(message = "Xác nhận mật khẩu không khớp")
 	private String confirmPassword;
-	// @NotBlank(message = "Tên tài khoản bị trống")
+	@NotBlank(message = "Tên tài khoản bị trống")
+	@Size(min = 4,max = 30,message = "Tên tài khoản nằm trong khoảng {min} đến {max} kí tự")
 	private String userName;
 
 	public String getPassword() {

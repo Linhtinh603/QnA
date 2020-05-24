@@ -1,10 +1,11 @@
 package vn.edu.iuh.qna.controller;
 
+import static vn.edu.iuh.qna.config.WebSecurityConfig.ROLE_USER;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -35,10 +36,8 @@ import vn.edu.iuh.qna.entity.UserModel;
 import vn.edu.iuh.qna.service.CategoryService;
 import vn.edu.iuh.qna.service.QuestionService;
 import vn.edu.iuh.qna.service.ReportService;
-import vn.edu.iuh.qna.service.ReportService.CountReportDto;
 import vn.edu.iuh.qna.service.UserService;
 import vn.edu.iuh.qna.utils.StringUtils;
-import static vn.edu.iuh.qna.config.WebSecurityConfig.ROLE_USER;
 
 @Secured(ROLE_USER)
 @Controller
@@ -355,9 +354,8 @@ public class UserController {
 		cal.add(Calendar.MONTH, -1);
 		Date fromDate = cal.getTime();
 
-		Map<String, List<CountReportDto>> report = reportService.queryUserReport(userDetail.getUser(), fromDate,
-				toDate);
-		model.addAttribute("report", report);
+		model.addAttribute("reportByUserAndQuestionHaveAnswer", reportService.reportByUserAndQuestionHaveAnswer(fromDate,toDate,userDetail.getUser()));
+		model.addAttribute("reportByUserAndCategory", reportService.reportByUserAndCategory(fromDate,toDate,userDetail.getUser()));
 		model.addAttribute("from", fromDate);
 		model.addAttribute("to", toDate);
 		return "user/statistics";

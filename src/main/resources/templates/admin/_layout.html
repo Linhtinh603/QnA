@@ -1,5 +1,6 @@
 <!DOCTYPE>
 <html xmlns:th="http://www.thymeleaf.org" th:fragment="base(content)">
+
 <head th:replace="_head(links=~{::link},scripts=~{::script})">
 	<link rel="stylesheet" th:href="@{/static/css/dataTables.bootstrap4.min.css}" />
 
@@ -8,7 +9,11 @@
 	<!--/* Per-page placeholder for additional scripts */-->
 	<th:block th:replace="${scripts} ?: ~{}" />
 </head>
-<nav th:replace="admin/_menu"></nav>
-<div th:replace="${content}"></div>
-<footer th:replace="_footer"></footer>
+
+<body class="d-flex flex-column">
+	<nav th:replace="admin/_menu"></nav>
+	<div th:replace="${content}"></div>
+	<footer th:replace="_footer"></footer>
+</body>
+
 </html>

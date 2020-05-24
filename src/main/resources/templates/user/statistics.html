@@ -2,7 +2,8 @@
 	th:replace="user\_layout :: base(content=~{::section},links=~{::link},scripts=~{::script})">
 	<script th:src="@{/static/js/Chart.min.js}" defer></script>
 	<script th:inline="javascript">
-		var reports = [[${report}]]
+		var reportByUserAndQuestionHaveAnswer = [[${reportByUserAndQuestionHaveAnswer}]]
+		var reportByUserAndCategory = [[${reportByUserAndCategory}]]
 		var fromDateStr = [[${#dates.format(from, 'dd-MM-yyyy')}]]
 		var toDateStr = [[${#dates.format(to, 'dd-MM-yyyy')}]]
 	</script>
@@ -17,7 +18,7 @@
 			</ol>
 		</nav>
 		<div class="row m-3">
-			<div class="col-2 list-group list-group-flush">
+			<div class="col-md-2 col-sm-12 list-group list-group-flush">
 				<a th:href="@{/my_profile/posted_questions}"
 					class="list-group-item list-group-item-action ">Câu hỏi của tôi</a>
 				<a th:href="@{/my_profile/star_questions}"
@@ -27,11 +28,14 @@
 					th:href="@{/my_profile/statistics}"
 					class="list-group-item list-group-item-action active">Thống kê</a>
 			</div>
-			<div class="col">
-				<p>Thống kê 30 ngày gần đây</p>
+			<div class="col-md-10 col-sm-12">
+				<p><i>Thống kê 30 ngày gần đây</i></p>
 				<div class="row">
-					<div class="col-md-10 col-12 pr-md-5">
-						<canvas id="report"></canvas>
+					<div class="col-sm-12 col-md-6">
+						<canvas id="reportByUserAndQuestionHaveAnswer"></canvas>
+					</div>
+					<div class="col-sm-12 col-md-6">
+						<canvas id="reportByUserAndCategory"></canvas>
 					</div>
 				</div>
 			</div>

@@ -37,45 +37,71 @@ var from = getDate(fromDateStr)
 var to = getDate(toDateStr)
 var dates = generateDate(from,to)
 
-var canvas = document.getElementById('report');
-new Chart(canvas, {
-	type : 'line',
-	data : {
-		labels : dates,
-		datasets : [ {
-			label : 'Câu hỏi',
-			yAxisID : 'A',
-			data :generatePoint(dates,reports.question),
-			 borderColor: "#3e95cd",
-		}, {
-			label : 'Trả lời',
-			yAxisID : 'B',
-			data : generatePoint(dates,reports.answer),
-			borderColor: "#8e5ea2",
-		} ]
-	},
-	options : {
-		scales : {
-			yAxes : [ {
-				id : 'A',
-				type : 'linear',
-				position : 'left',
-				ticks: {
-		                min: 0
-		         },
-		         scaleLabel: {
-		             display: true,
-		             labelString: 'Số câu hỏi'
-		         }
-			}, {
-				id : 'B',
-				type : 'linear',
-				position : 'right',
-				scaleLabel: {
-		             display: true,
-		             labelString: 'Số câu trả lời'
-		         }
-			} ]
+function getRandomColor() {
+	var letters = '0123456789ABCDEF'.split('');
+	var color = '#';
+	for (var i = 0; i < 6; i++) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
+	return color;
+}
+
+
+function generateColors(size) {
+	colors = []
+
+	for (var i = 0; i < size; ++i) {
+		var color = getRandomColor();
+		var flag = colors.find(c => c == color);
+
+		if (!flag) {
+			colors.push(color)
+		} else {
+			--i;
 		}
 	}
-});
+	return colors;
+}
+
+function producerData(report) {
+	var colors = generateColors(report.length)
+	data = {
+		datasets: [{
+			data: report.map(i => i.data),
+			backgroundColor: colors,
+		}],
+		labels: report.map(i => i.label)
+	};
+	return data;
+}
+function producerChart(reportData, elementId, title) {
+	var ctx = document.getElementById(elementId);
+	//options
+	var options = {
+		responsive: true,
+		title: {
+			display: true,
+			position: "top",
+			text: title,
+			fontSize: 18,
+			fontColor: "#111"
+		},
+		legend: {
+			display: true,
+			position: "bottom",
+			labels: {
+				fontColor: "#333",
+				fontSize: 16
+			}
+		}
+	};
+	var data = producerData(reportData)
+	var myPieChart = new Chart(ctx, {
+		type: 'pie',
+		data: data,
+		options: options
+	});
+}
+
+producerChart(reportByUserAndQuestionHaveAnswer,'reportByUserAndQuestionHaveAnswer','Câu hỏi có câu trả lời')
+producerChart(reportByUserAndCategory,'reportByUserAndCategory','Câu hỏi theo thể loại')

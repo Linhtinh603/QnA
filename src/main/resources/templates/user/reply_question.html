@@ -24,7 +24,7 @@
 				th:classappend="${following} ? 'fas fa-star text-warning' : 'far fa-star text-success'"></i> 
 				</h4> 
 				<div class="row border-bottom border-dark">
-					<a th:text="'Danh mục: ' + ${question.category.name}" th:href="@{search(category=${question.category.id})}" class="col-auto">Category</a>
+					<a th:text="'Danh mục: ' + ${question.category.name}" th:href="@{/(category=${question.category.id})}" class="col-auto">Category</a>
 					<div th:text="${question.view} + ' lượt xem'" class="col-auto font-italic text-warning">124 Lượt xem xem</div>
 					<a th:href="@{/profile/{id}(id=${question.author.userName})}">
 						<span th:text="'Tạo bởi ' + ${question.author.fullName} + ' ('+${question.author.userName}+') '" 

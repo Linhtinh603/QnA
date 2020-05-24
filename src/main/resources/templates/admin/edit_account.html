@@ -8,6 +8,7 @@
 				<nav class="nav nav-pills flex-column ">
 					<a class="nav-item nav-link" th:href="@{/admin/}">Thống kê</a>
 					<a class="nav-item nav-link active" th:href="@{/admin/manage_accounts}">Quản lý tài khoản</a>
+					<a class="nav-item nav-link" th:href="@{/admin/manage_categories}">Quản lý thể loại</a>
 					<a class="nav-item nav-link" th:href="@{/admin/manage_questions}">Quản lý câu hỏi</a>
 				</nav>
 			</div>
@@ -45,9 +46,9 @@
 					<div class="form-group row">
 						<label for="userName" class="col-sm-2 col-form-label">Tên tài khoản:</label>
 						<div class="col-sm-6">
-							<input type="text" class="form-control"
+							<input tabindex="-1" type="text" class="form-control"
 								placeholder="nhập tên tài khoản ở đây(VD: PhuongHTM)"
-								th:field="*{userName}" th:errorclass="is-invalid" disabled>
+								th:field="*{userName}" th:errorclass="is-invalid" readonly="readonly">
 							<div class="invalid-feedback" th:errors="*{userName}"></div>
 						</div>
 					</div>
