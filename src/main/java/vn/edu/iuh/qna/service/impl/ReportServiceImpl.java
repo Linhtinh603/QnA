@@ -123,10 +123,5 @@ public class ReportServiceImpl implements ReportService {
 		return report;
 	}
 
-	@Override
-	public List<PieDto> reportByUserQuestionDeleteByAdmin() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 }

@@ -15,5 +15,4 @@ public interface ReportService {
 	List<PieDto> reportByStatus(Date from, Date to);
 	List<PieDto> reportByUserAndQuestionHaveAnswer(Date from, Date to, UserModel user);
 	List<PieDto> reportByUserAndCategory(Date from, Date to, UserModel user);
-	List<PieDto> reportByUserQuestionDeleteByAdmin();
 }
