@@ -95,7 +95,7 @@ $(document).ready(function() {
 				category: {id:category},
 				content: JSON.stringify(content) }),
 			beforeSend:function(){
-				self.disabled = true;
+				$(self).prop("disabled", true);
 			},
 			statusCode: {
 				  302: function() { 
@@ -112,7 +112,7 @@ $(document).ready(function() {
 				  400: function() { toastr.error('Hãy thử lại sau', 'Có lỗi xảy ra!'); }
 			},
 			complete: function() {
-				self.disabled = false;
+				$(self).prop("disabled", true);
 			}
 		});
 	});

@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import vn.edu.iuh.qna.dto.PieDto;
 import vn.edu.iuh.qna.dto.UserDetailReqDto;
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
@@ -100,9 +101,6 @@ public class UserController {
 	@PostMapping("/questions/new")
 	public ResponseEntity<String> doCreateQuestion(@RequestBody QuestionModel question, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailReqDto)) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		question.setAuthor(userDetail.getUser());
 		question.setCreateTime(new Date());
@@ -119,27 +117,22 @@ public class UserController {
 	@GetMapping("/questions/{id}")
 	public String viewQuestion(Model model, @PathVariable String id, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailReqDto)) {
-			return "403Page";
-		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		model.addAttribute("userId", userDetail.getUser().getId());
-		List<CategoryModel> listCategory = categoryService.findAll();
-		model.addAttribute("categories", listCategory);
 		Optional<QuestionModel> question = questionService.finById(id);
-		if(question.get().isDeleted()) {
+		if (question.get().isDeleted()) {
 			return "404Page";
 		}
-		model.addAttribute("question",question.get());
-		if(question.get().getAuthor().getUserName().equals(userDetail.getUsername())) {
+		model.addAttribute("question", question.get());
+		if (question.get().getAuthor().getUserName().equals(userDetail.getUsername())) {
 			return "user/view_question";
 		}
-		
+
 		question.get().setView(question.get().getView() + 1);
 		questionService.save(question.get());
-		boolean following = false;	
-		for(QuestionModel followingQuestion : userDetail.getUser().getFollowingQuestions()) {
-			if(followingQuestion.getId().equals(id)) {
+		boolean following = false;
+		for (QuestionModel followingQuestion : userDetail.getUser().getFollowingQuestions()) {
+			if (followingQuestion.getId().equals(id)) {
 				following = true;
 				break;
 			}
@@ -163,7 +156,7 @@ public class UserController {
 			return "403Page";
 		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
-		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+		if (!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
 			return "403Page";
 		}
 		List<CategoryModel> listCategory = categoryService.findAll();
@@ -197,107 +190,92 @@ public class UserController {
 		questionService.save(originQuestion.get());
 		return new ResponseEntity<String>(HttpStatus.CREATED);
 	}
-	
+
 	@ResponseBody
 	@DeleteMapping("/questions/delete")
-	public ResponseEntity<String> deleteQuestion(@RequestParam String id ,Authentication authentication){
+	public ResponseEntity<String> deleteQuestion(@RequestParam String id, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailReqDto)) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		Optional<QuestionModel> question = questionService.finById(id);
-		
-		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+
+		if (!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
 			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
 		}
-		
+
 		question.get().setDeleted(true);
 		questionService.save(question.get());
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@PostMapping("/questions/follow")
-	public ResponseEntity<String> followQuestion(@RequestParam String id ,Authentication authentication){
+	public ResponseEntity<String> followQuestion(@RequestParam String id, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailReqDto)) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		UserModel user = userDetail.getUser();
 		Optional<QuestionModel> question = questionService.finById(id);
-		if(!user.getFollowingQuestions().contains(question.get()))	{
+		if (!user.getFollowingQuestions().contains(question.get())) {
 			user.getFollowingQuestions().add(question.get());
 			userService.save(user);
-			question.get().setFollower(question.get().getFollower()+1);
+			question.get().setFollower(question.get().getFollower() + 1);
 			questionService.save(question.get());
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@PostMapping("/questions/unfollow")
-	public ResponseEntity<String> unfollowQuestion(@RequestParam String id ,Authentication authentication){
+	public ResponseEntity<String> unfollowQuestion(@RequestParam String id, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailReqDto)) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
 		UserModel user = userDetail.getUser();
-		Optional<QuestionModel> question = questionService.finById(id);		
-		if(user.getFollowingQuestions().remove(question.get())){
+		Optional<QuestionModel> question = questionService.finById(id);
+		if (user.getFollowingQuestions().remove(question.get())) {
 			userService.save(user);
-			question.get().setFollower(Math.max(question.get().getFollower()-1,0));
+			question.get().setFollower(Math.max(question.get().getFollower() - 1, 0));
 			questionService.save(question.get());
 		}
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@PutMapping("/questions/{id}/right-answer")
-	public ResponseEntity<String> chooseRightAnswer(@PathVariable String id, @RequestParam String rightAnswerId ,Authentication authentication){
+	public ResponseEntity<String> chooseRightAnswer(@PathVariable String id, @RequestParam String rightAnswerId,
+			Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailReqDto)) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
-		Optional<QuestionModel> question = questionService.finById(id);		
-		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
-			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+		Optional<QuestionModel> question = questionService.finById(id);
+		if (!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 		question.get().setRightAnswerId(rightAnswerId);
 		questionService.save(question.get());
-		
+
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	@ResponseBody
 	@PutMapping("/questions/{id}/cancle-right-answer")
-	public ResponseEntity<String> cancleRightAnswer(@PathVariable String id, Authentication authentication){
+	public ResponseEntity<String> cancleRightAnswer(@PathVariable String id, Authentication authentication) {
 		Object principal = authentication.getPrincipal();
-		if (!(principal instanceof UserDetailReqDto)) {
-			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-		}
 		UserDetailReqDto userDetail = (UserDetailReqDto) principal;
-		Optional<QuestionModel> question = questionService.finById(id);		
-		if(!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
-			return new ResponseEntity<String>(HttpStatus.UNAUTHORIZED);
+		Optional<QuestionModel> question = questionService.finById(id);
+		if (!userDetail.getUsername().equals(question.get().getAuthor().getUserName())) {
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 		}
 		question.get().setRightAnswerId("");
 		questionService.save(question.get());
-		
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+
 	@GetMapping({ "/profile/{username}" })
-	public String viewProfile(Model model, Authentication authentication, @PathVariable String username){
+	public String viewProfile(Model model, Authentication authentication, @PathVariable String username) {
 		Object principal = authentication.getPrincipal();
 		if (!(principal instanceof UserDetailReqDto)) {
 			return "redirect:/";
 		}
-		
-		Optional<UserModel> user = userService.findByUserName(username);		
+
+		Optional<UserModel> user = userService.findByUserName(username);
 		model.addAttribute("user", user.get());
 		List<CategoryModel> listCategory = categoryService.findAll();
 		model.addAttribute("categories", listCategory);
@@ -313,7 +291,8 @@ public class UserController {
 			return "redirect:/";
 		}
 		UserDetailReqDto author = (UserDetailReqDto) principal;
-		Page<QuestionModel> postedQuesstions = questionService.findByAuthor(author.getUser(), PageRequest.of(page - 1, size));
+		Page<QuestionModel> postedQuesstions = questionService.findByAuthor(author.getUser(),
+				PageRequest.of(page - 1, size));
 		model.addAttribute("postedQuestions", postedQuesstions);
 		return "user/posted_questions";
 	}
@@ -322,16 +301,16 @@ public class UserController {
 	public String starQuestion(Model model, Authentication authentication,
 			@RequestParam(required = false, defaultValue = "1") int page,
 			@RequestParam(required = false, defaultValue = "5") int size) {
-		
+
 		Object principal = authentication.getPrincipal();
 		if (!(principal instanceof UserDetailReqDto)) {
 			return "redirect:/";
 		}
 		UserDetailReqDto user = (UserDetailReqDto) principal;
-		List<QuestionModel> followQuestionList = user.getUser().getFollowingQuestions()
-				.stream().filter(f -> !f.isDeleted()).collect(Collectors.toList());
+		List<QuestionModel> followQuestionList = user.getUser().getFollowingQuestions().stream()
+				.filter(f -> !f.isDeleted()).collect(Collectors.toList());
 		Page<QuestionModel> followingQuestions = new PageImpl<QuestionModel>(followQuestionList);
-		
+
 		model.addAttribute("followingQuestions", followingQuestions);
 		return "user/star_questions";
 	}
@@ -354,8 +333,10 @@ public class UserController {
 		cal.add(Calendar.MONTH, -1);
 		Date fromDate = cal.getTime();
 
-		model.addAttribute("reportByUserAndQuestionHaveAnswer", reportService.reportByUserAndQuestionHaveAnswer(fromDate,toDate,userDetail.getUser()));
-		model.addAttribute("reportByUserAndCategory", reportService.reportByUserAndCategory(fromDate,toDate,userDetail.getUser()));
+		List<PieDto> reportByUserAndQuestionHaveAnswer = reportService.reportByUserAndQuestionHaveAnswer(fromDate,toDate,userDetail.getUser());
+		List<PieDto> reportByUserAndCategory = reportService.reportByUserAndCategory(fromDate,toDate,userDetail.getUser());
+		model.addAttribute("reportByUserAndQuestionHaveAnswer", reportByUserAndQuestionHaveAnswer);
+		model.addAttribute("reportByUserAndCategory", reportByUserAndCategory);
 		model.addAttribute("from", fromDate);
 		model.addAttribute("to", toDate);
 		return "user/statistics";

@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		Optional<UserModel> userOptional = userService.findByUserName(userName);
-		return userOptional.map(user->new UserDetailReqDto(user))
+		return userOptional.map(UserDetailReqDto::new)
 				.orElseThrow(() -> new UsernameNotFoundException("User " + userName + " was not found in the database"));
 	}
 }

@@ -14,14 +14,15 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
+import lombok.extern.slf4j.Slf4j;
 import vn.edu.iuh.qna.dto.UserDetailReqDto;
 import vn.edu.iuh.qna.entity.AnswerModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
 import vn.edu.iuh.qna.service.QuestionService;
 
+@Slf4j
 @Controller
 public class WebSocketController {
-	private static final Logger log = LoggerFactory.getLogger(WebSocketController.class);
 
 	@Autowired
 	private QuestionService questionService;

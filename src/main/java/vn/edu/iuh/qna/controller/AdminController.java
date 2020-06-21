@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import vn.edu.iuh.qna.dto.PieDto;
 import vn.edu.iuh.qna.dto.UserInfoReqDto;
 import vn.edu.iuh.qna.entity.CategoryModel;
 import vn.edu.iuh.qna.entity.QuestionModel;
@@ -69,11 +70,14 @@ public class AdminController {
 			cal.add(Calendar.MONTH, -1);
 			fromDate = cal.getTime();
 		}
+		List<PieDto> reportHaveAnswer = reportService.reportByQuestionHaveAnswer(fromDate, toDate);
+		List<PieDto> reportByCategory = reportService.reportByCategory(fromDate, toDate);
+		List<PieDto> reportByStatus = reportService.reportByStatus(fromDate, toDate);
 		model.addAttribute("from", fromDate);
 		model.addAttribute("to", toDate);
-		model.addAttribute("reportHaveAnswer", reportService.reportByQuestionHaveAnswer(fromDate, toDate));
-		model.addAttribute("reportByCategory", reportService.reportByCategory(fromDate, toDate));
-		model.addAttribute("reportByStatus", reportService.reportByStatus(fromDate, toDate));
+		model.addAttribute("reportHaveAnswer", reportHaveAnswer);
+		model.addAttribute("reportByCategory", reportByCategory);
+		model.addAttribute("reportByStatus", reportByStatus);
 		return "admin/report";
 	}
 
@@ -180,7 +184,7 @@ public class AdminController {
 	}
 
 	@PostMapping("add_category")
-	public String doAdCategory(@Valid @ModelAttribute("category") CategoryModel category, BindingResult bindingResult,
+	public String doAddCategory(@Valid @ModelAttribute("category") CategoryModel category, BindingResult bindingResult,
 			Model model) {
 		if (bindingResult.hasErrors()) {
 			List<CategoryModel> categories = categoryService.findAll();
@@ -201,7 +205,7 @@ public class AdminController {
 
 	@ResponseBody
 	@PostMapping("delete_question")
-	public ResponseEntity<String> deleteUser(@RequestParam String questionId) {
+	public ResponseEntity<String> deleteQuestion(@RequestParam String questionId) {
 		Optional<QuestionModel> questionOp = questionService.finById(questionId);
 		if (!questionOp.isPresent()) {
 			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
