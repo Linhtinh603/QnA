@@ -307,7 +307,9 @@ public class UserController {
 			return "redirect:/";
 		}
 		UserDetailReqDto user = (UserDetailReqDto) principal;
-		List<QuestionModel> followQuestionList = user.getUser().getFollowingQuestions().stream()
+		UserModel userModel = user.getUser();
+		userModel = userService.findById(userModel.getId()).get();// refresh user data
+		List<QuestionModel> followQuestionList = userModel.getFollowingQuestions().stream()
 				.filter(f -> !f.isDeleted()).collect(Collectors.toList());
 		Page<QuestionModel> followingQuestions = new PageImpl<QuestionModel>(followQuestionList);
 

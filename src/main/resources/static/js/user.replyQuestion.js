@@ -23,18 +23,31 @@ function sendMessage(event){
 	 stompClient.send(`/app/reply/${questionId}`, {}, JSON.stringify(answer));
 	 toastr.success("Bạn đã vừa gửi trả lời cho câu hỏi này.")
 }
+
+function starOver(element){
+	element.classList.add("animate__tada");
+}
+function starOut(element){
+	element.classList.remove("animate__tada");
+}
+function rightQuestionOver(element){
+	element.classList.add("animate__bounce");
+}
+function rightQuestionOut(element){
+	element.classList.remove("animate__bounce");
+}
 function onMessageReceived(payload){
 	 var answer = JSON.parse(payload.body);
 	 var answer_list = document.getElementById('answer-list');
 	 
 	 if(owner){
-		 var element = `<table class="mt-3 border-bottom border-secondary">
+		 var element = `<table class="mt-3 border-bottom border-secondary animate__animated animate__rotateInDownLeft">
 				<tbody>	
 					<tr>
 						<td class="align-middle text-secondary" data-toggle="tooltip"
 							data-placement="top"
 							title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
-							<i class="fas fa-check fa-3x answer-tick" data-toggle="modal" id="${answer.id}"></i>
+							<i onmouseover="starOver(this)" onmouseout="starOut(this)" class="fas fa-check fa-3x answer-tick animate__animated" data-toggle="modal" id="${answer.id}"></i>
 						</td>
 						<td>${answer.content}.</td>
 					</tr>
@@ -51,7 +64,7 @@ function onMessageReceived(payload){
 				</tbody>
 			</table>`
 	 }else{
-		 var element = `<table class="mt-3 border-bottom border-secondary">
+		 var element = `<table class="mt-3 border-bottom border-secondary animate__animated animate__rotateInDownLeft">
 				<tbody>	
 					<tr>
 						<td>${answer.content}.</td>
@@ -71,7 +84,11 @@ function onMessageReceived(payload){
 	
 	answer_list.insertAdjacentHTML("beforeend",element)
 	$("#content").val("")
-	$("#noAnswerLable").remove()
+	if(answersSize==0){
+		$("#noAnswerLable").remove()
+		$("#answersSize").removeClass('d-none')
+	}
+	$("#answersSizeText").text(++answersSize)
 
 	$(document).off("click", ".answer-tick");
 	$(".answer-tick").click(function () {
@@ -79,6 +96,7 @@ function onMessageReceived(payload){
 		var answerId = $(this).attr("id")
 		$("#btnTick").attr("data-answer", answerId);
 	})
+
 }
 
 $(document).ready(function() {

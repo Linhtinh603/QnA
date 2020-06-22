@@ -7,6 +7,7 @@
 			var userId = [[${userId}]]
 			var owner = false
 			var following = [[${following}]]
+			var answersSize = [[${#lists.size(question.answers)}]]
 	</script>
 	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
 	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
@@ -20,7 +21,7 @@
 	<section class="container">
 		<div class="row">
 			<div class="col-12">
-				<h4> <span th:text="${question.title}"></span> <i id="btnFollow" class="align-middle cursor-p" data-toggle="tooltip" data-placement="top" title="Quan tâm theo dõi câu hỏi này"
+				<h4> <span th:text="${question.title}"></span> <i id="btnFollow" onmouseover="starOver(this)" onmouseout="starOut(this)" class="align-middle cursor-p animate__animated " data-toggle="tooltip" data-placement="top" title="Quan tâm theo dõi câu hỏi này"
 				th:classappend="${following} ? 'fas fa-star text-warning' : 'far fa-star text-success'"></i> 
 				</h4> 
 				<div class="row border-bottom border-dark">
@@ -64,7 +65,7 @@
 						</tr>
 						<tr>
 							<td>
-								<div>
+								<div class="pb-2 small">
 									<a th:href="@{/profile/{id}(id=${question.author.userName})}" th:text="${question.author.fullName}"
 										class="font-italic text-info">Name</a> 
 									<span
@@ -80,10 +81,9 @@
 						class="mt-3 text-monospace text-danger ">
 						Chưa có câu trả lời
 				</div>
-				<div th:if = "${not #lists.isEmpty(question.answers)}" 
-					th:text="'Có ' + ${#lists.size(question.answers)} + ' câu trả lời'" 
-					class="mt-3 text-monospace text-success font-weight-bold">
-					Có 4 câu trả lời
+				<div id="answersSize" th:classappend="${not #lists.isEmpty(question.answers) ? 'd-block' : 'd-none'}"
+					class="mt-3 text-monospace text-success font-weight-bold" >
+					Có <span id="answersSizeText" th:text="${#lists.size(question.answers)}" ></span> câu trả lời
 				</div>
 				<table class="mt-3 border-bottom border-secondary" th:if="${question.rightAnswerId != ''}">
 					<tbody th:each = "answer : ${question.answers}" th:if="${answer.id == question.rightAnswerId}">
@@ -97,7 +97,7 @@
 						<tr>
 							<td></td>
 							<td>
-								<div>
+								<div class="pb-2 small">
 									<a th:href="@{/profile/{id}(id=${answer.author.userName})}" th:text="${answer.author.fullName}"
 										class="font-italic text-info">Name</a> 
 									<span
@@ -117,7 +117,7 @@
 								</tr>
 								<tr>									
 									<td>
-										<div>
+										<div class="pb-2 small">
 											<a th:href="@{/profile/{id}(id=${answer.author.userName})}" th:text="${answer.author.fullName}"
 												class="font-italic text-info">Name</a> 
 											<span

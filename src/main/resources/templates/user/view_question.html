@@ -5,7 +5,8 @@
 			var originContent = JSON.parse(originContentString);
 			var questionId =  [[${question.id}]]
 			var userId = [[${userId}]]
-			var owner = true
+			var owner = true;
+			var answersSize = [[${#lists.size(question.answers)}]]	
 	</script>
 	<script th:src="@{/static/js/user.viewQuestion.js}" defer></script>
 	<script th:src="@{/static/js/user.replyQuestion.js}" defer></script>
@@ -77,7 +78,7 @@
 						</tr>
 						<tr>
 							<td>
-								<div>
+								<div class="pb-2 small">
 									<a th:href="@{/profile/{id}(id=${question.author.userName})}" th:text="${question.author.fullName}"
 										class="font-italic m-1 text-info">Name</a> 
 									<span
@@ -92,15 +93,15 @@
 					th:text="'Chưa có câu trả lời cho câu hỏi này, hãy là người đầu tiên trả lời câu hỏi.'"
 					class="mt-3 text-monospace text-danger ">Chưa có câu trả lời
 				</div>
-				<div th:if="${not #lists.isEmpty(question.answers)}"
-					th:text="'Có ' + ${#lists.size(question.answers)} + ' câu trả lời'"
-					class="mt-3 text-monospace text-success font-weight-bold">Có
-					4 câu trả lời</div>
+				<div id="answersSize" th:classappend="${not #lists.isEmpty(question.answers) ? 'd-block' : 'd-none'}"
+					class="mt-3 text-monospace text-success font-weight-bold" >
+					Có <span id="answersSizeText" th:text="${#lists.size(question.answers)}" ></span> câu trả lời
+				</div>
 				<table class="mt-3 border-bottom border-secondary" th:if="${question.rightAnswerId != ''}">
 					<tbody th:each = "answer : ${question.answers}" th:if="${answer.id == question.rightAnswerId}">
 						<tr>
 							<td class="align-middle cursor-p" data-toggle="tooltip" data-placement="top" title="Nhấn vào để hủy câu trả lời đúng">
-								<i id="btnCancleRightAnswer" class="fas fa-check fa-3x text-primary"></i>
+								<i id="btnCancleRightAnswer" onmouseover="rightQuestionOver(this)" onmouseout="rightQuestionOut(this)" class="fas fa-check fa-3x text-primary animate__animated"></i>
 							</td>
 							<td th:text="${answer.content}" class="text-info p-2" style="background-color: #e6e6ff;"> Nội dung.
 							</td>
@@ -108,7 +109,7 @@
 						<tr>
 							<td></td>
 							<td>
-								<div>
+								<div class="pb-2 small">
 									<a th:href="@{/profile/{id}(id=${answer.author.userName})}" th:text="${answer.author.fullName}"
 										class="font-italic text-info">Name</a> 
 									<span
@@ -127,14 +128,14 @@
 									<td class="align-middle text-secondary cursor-p" data-toggle="tooltip"
 										data-placement="top"
 										title="Nhấn vào để dánh dấu câu trả lời giải quyết được vấn đề của bạn">
-											<i class="fas fa-check fa-3x answer-tick" data-toggle="modal" th:id="${answer.id}" ></i>
+											<i onmouseover="starOver(this)" onmouseout="starOut(this)" class="fas fa-check fa-3x answer-tick animate__animated" data-toggle="modal" th:id="${answer.id}" ></i>
 									</td>
 									<td th:text="${answer.content}">Nội dung câu trả lời.</td>						
 								</tr>
 								<tr>
 									<td></td>
 									<td>
-										<div>
+										<div class="pb-2 small">
 											<a th:href="@{/profile/{id}(id=${answer.author.userName})}" th:text="${answer.author.fullName}"
 												class="font-italic text-info">Name</a> 
 											<span
